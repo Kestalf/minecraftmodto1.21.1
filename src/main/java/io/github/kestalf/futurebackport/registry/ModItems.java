@@ -118,6 +118,8 @@ public final class ModItems {
             () -> new DeferredSpawnEggItem(ModEntities.HAPPY_GHAST, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
     public static final DeferredItem<DeferredSpawnEggItem> CREAKING_SPAWN_EGG = ITEMS.register("creaking_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntities.CREAKING, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
+    public static final DeferredItem<DeferredSpawnEggItem> COPPER_GOLEM_SPAWN_EGG = ITEMS.register("copper_golem_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.COPPER_GOLEM, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
 
     // ------------------------------------------------------------------ helpers
 

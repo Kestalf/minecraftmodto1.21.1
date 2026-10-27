@@ -13,6 +13,7 @@ public final class ModTags {
         public static final TagKey<Block> POPLAR_LOGS = tag("poplar_logs");
         public static final TagKey<Block> LIGHTNING_RODS = tag("lightning_rods");
         public static final TagKey<Block> COPPER_CHESTS = tag("copper_chests");
+        public static final TagKey<Block> COPPER_GOLEM_STATUES = tag("copper_golem_statues");
         public static final TagKey<Block> WOODEN_SHELVES = tag("wooden_shelves");
 
         private static TagKey<Block> tag(String name) {

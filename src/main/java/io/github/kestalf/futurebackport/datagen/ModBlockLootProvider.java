@@ -67,6 +67,14 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
         ModBlocks.WOOL_SLABS.values().forEach(b -> add(b.get(), this::createSlabItemTable));
         ModBlocks.CONCRETE_SLABS.values().forEach(b -> add(b.get(), this::createSlabItemTable));
 
+        ModBlocks.COPPER.chests.all().forEach(b -> add(b.get(), this::createNameableBlockEntityTable));
+        ModBlocks.COPPER.statues.all().forEach(b -> add(b.get(), block -> LootTable.lootTable().withPool(applyExplosionCondition(block,
+                LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(block)
+                        .apply(net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction
+                                .copyComponents(net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction.Source.BLOCK_ENTITY)
+                                .include(net.minecraft.core.component.DataComponents.CUSTOM_NAME))
+                        .apply(net.minecraft.world.level.storage.loot.functions.CopyBlockState.copyState(block)
+                                .copy(io.github.kestalf.futurebackport.block.CopperGolemStatueBlock.POSE)))))));
         ModBlocks.COPPER.all().forEach(b -> {
             if (b != ModBlocks.COPPER.wallTorch) dropSelf(b.get());
         });

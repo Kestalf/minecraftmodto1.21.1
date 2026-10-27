@@ -89,6 +89,7 @@ public final class ScreenshotTour {
         if (scenario("spear")) addSpearScenario(server);
         if (scenario("ghast")) addGhastScenario(server);
         if (scenario("creaking")) addCreakingScenario(server);
+        if (scenario("golem")) addGolemScenario(server);
         if (scenario("creative")) addCreativeScenario(server);
     }
 
@@ -396,6 +397,121 @@ public final class ScreenshotTour {
             exec(server, "gamerule doMobSpawning false");
             exec(server, "time set 6000");
         }));
+    }
+
+    /**
+     * Copper golem checks: building one from a pumpkin, carrying items from its copper chest to a wooden chest,
+     * copper chests keeping their items when they oxidize, statue poses and reanimating a statue with an axe.
+     */
+    private static void addGolemScenario(MinecraftServer server) {
+        BlockPos base = ORIGIN.offset(-170, 0, 0);
+        java.util.UUID[] golemId = new java.util.UUID[1];
+        var copper = ModBlocks.COPPER;
+        var stages = net.minecraft.world.level.block.WeatheringCopper.WeatherState.values();
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            String name = m.player.getGameProfile().getName();
+            exec(server, "gamemode spectator " + name);
+            exec(server, "time set 6000");
+            for (int x = -10; x <= 10; x++) {
+                for (int z = -10; z <= 10; z++) {
+                    level.setBlock(base.offset(x, 0, z), Blocks.GRASS_BLOCK.defaultBlockState(), 2);
+                    for (int y = 1; y < 8; y++) level.setBlock(base.offset(x, y, z), Blocks.AIR.defaultBlockState(), 2);
+                }
+            }
+            // Build a golem: copper block, then a carved pumpkin on top.
+            level.setBlock(base.above(), Blocks.COPPER_BLOCK.defaultBlockState(), 3);
+            level.setBlock(base.above(2), Blocks.CARVED_PUMPKIN.defaultBlockState()
+                    .setValue(net.minecraft.world.level.block.CarvedPumpkinBlock.FACING, net.minecraft.core.Direction.SOUTH), 3);
+            var golems = level.getEntitiesOfClass(io.github.kestalf.futurebackport.entity.golem.CopperGolem.class, new net.minecraft.world.phys.AABB(base).inflate(4));
+            FutureBackport.LOGGER.info("[tour] golem built: golems={} block below={} pumpkin pos={}", golems.size(), level.getBlockState(base.above()),
+                    level.getBlockState(base.above(2)));
+            if (!golems.isEmpty()) golemId[0] = golems.getFirst().getUUID();
+            if (level.getBlockEntity(base.above()) instanceof net.minecraft.world.Container chest) {
+                chest.setItem(3, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COBBLESTONE, 20));
+                chest.setItem(5, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.DIAMOND, 5));
+            }
+            level.setBlock(base.offset(5, 1, 0), Blocks.CHEST.defaultBlockState(), 3);
+            // Copper chests of all stages (and a double one) and statues in all poses.
+            for (int i = 0; i < 4; i++) {
+                level.setBlock(base.offset(-6 + i * 2, 1, 6), copper.chests.get(stages[i], false).defaultBlockState(), 3);
+                level.setBlock(base.offset(-6 + i * 2, 1, 8), copper.statues.get(stages[i], i % 2 == 1).defaultBlockState()
+                        .setValue(io.github.kestalf.futurebackport.block.CopperGolemStatueBlock.FACING, net.minecraft.core.Direction.SOUTH)
+                        .setValue(io.github.kestalf.futurebackport.block.CopperGolemStatueBlock.POSE,
+                                io.github.kestalf.futurebackport.block.CopperGolemPose.values()[i]), 3);
+            }
+            var west = copper.chests.get(stages[0], false).defaultBlockState()
+                    .setValue(net.minecraft.world.level.block.ChestBlock.FACING, net.minecraft.core.Direction.SOUTH);
+            level.setBlock(base.offset(3, 1, 6), west.setValue(net.minecraft.world.level.block.ChestBlock.TYPE,
+                    net.minecraft.world.level.block.state.properties.ChestType.RIGHT), 3);
+            level.setBlock(base.offset(4, 1, 6), copper.chests.get(stages[2], false).defaultBlockState()
+                    .setValue(net.minecraft.world.level.block.ChestBlock.FACING, net.minecraft.core.Direction.SOUTH)
+                    .setValue(net.minecraft.world.level.block.ChestBlock.TYPE, net.minecraft.world.level.block.state.properties.ChestType.LEFT), 3);
+            exec(server, String.format(java.util.Locale.ROOT, "tp %s %d %d %d 0 25", name, base.getX(), base.getY() + 4, base.getZ() - 6));
+        }));
+        STEPS.add(m -> m.options.hideGui = true);
+        STEPS.add(m -> shot(m, "golem_built"));
+        STEPS.add(m -> {});
+        STEPS.add(m -> {});
+        STEPS.add(m -> pending = server.submit(() -> logGolem(server, golemId[0], base)));
+        STEPS.add(m -> shot(m, "golem_working"));
+        STEPS.add(m -> {});
+        STEPS.add(m -> {});
+        STEPS.add(m -> pending = server.submit(() -> logGolem(server, golemId[0], base)));
+        STEPS.add(m -> pending = server.submit(() -> {
+            // Close-up of the golem, frozen and facing the camera, holding an item.
+            var golem = (io.github.kestalf.futurebackport.entity.golem.CopperGolem) server.overworld().getEntity(golemId[0]);
+            if (golem == null) return;
+            golem.setNoAi(true);
+            golem.moveTo(base.getX() + 0.5, base.getY() + 1, base.getZ() - 2.5, 180.0F, 0.0F);
+            golem.setYHeadRot(180.0F);
+            golem.setYBodyRot(180.0F);
+            golem.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.DIAMOND, 5));
+            exec(server, String.format(java.util.Locale.ROOT, "tp %s %.1f %.1f %.1f 0 20", m.player.getGameProfile().getName(),
+                    base.getX() + 0.5, base.getY() + 1.6, base.getZ() - 5.0));
+        }));
+        STEPS.add(m -> shot(m, "golem_closeup"));
+        STEPS.add(m -> run(server, String.format(java.util.Locale.ROOT, "tp %s %d %d %d 180 30", m.player.getGameProfile().getName(),
+                base.getX() - 3, base.getY() + 3, base.getZ() + 12)));
+        STEPS.add(m -> shot(m, "copper_chests_and_statues"));
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            // Oxidize a chest holding an item: the item must survive the block change.
+            BlockPos chestPos = base.offset(-6, 1, 6);
+            if (level.getBlockEntity(chestPos) instanceof net.minecraft.world.Container chest) {
+                chest.setItem(0, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.APPLE, 3));
+            }
+            var current = level.getBlockState(chestPos);
+            net.minecraft.world.level.block.WeatheringCopper.getNext(current.getBlock())
+                    .ifPresent(block -> level.setBlockAndUpdate(chestPos, block.withPropertiesOf(current)));
+            FutureBackport.LOGGER.info("[tour] oxidized chest: {} item={}", level.getBlockState(chestPos).getBlock(),
+                    level.getBlockEntity(chestPos) instanceof net.minecraft.world.Container c ? c.getItem(0) : "no container");
+            // Reanimate the unaffected statue with an axe.
+            BlockPos statuePos = base.offset(-6, 1, 8);
+            var player = server.getPlayerList().getPlayers().getFirst();
+            var axe = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_AXE);
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, axe);
+            var hit = new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(statuePos), net.minecraft.core.Direction.UP,
+                    statuePos, false);
+            var result = level.getBlockState(statuePos).useItemOn(axe, level, player, net.minecraft.world.InteractionHand.MAIN_HAND, hit);
+            var golems = level.getEntitiesOfClass(io.github.kestalf.futurebackport.entity.golem.CopperGolem.class,
+                    new net.minecraft.world.phys.AABB(statuePos).inflate(1));
+            FutureBackport.LOGGER.info("[tour] statue reanimation: result={} block={} golems={}", result, level.getBlockState(statuePos), golems.size());
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, net.minecraft.world.item.ItemStack.EMPTY);
+        }));
+        STEPS.add(m -> shot(m, "statue_reanimated"));
+    }
+
+    private static void logGolem(MinecraftServer server, java.util.UUID golemId, BlockPos base) {
+        ServerLevel level = server.overworld();
+        var golem = golemId == null ? null : (io.github.kestalf.futurebackport.entity.golem.CopperGolem) level.getEntity(golemId);
+        String target = level.getBlockEntity(base.offset(5, 1, 0)) instanceof net.minecraft.world.Container c
+                ? java.util.stream.IntStream.range(0, c.getContainerSize()).mapToObj(c::getItem).filter(st -> !st.isEmpty()).toList().toString() : "?";
+        String source = level.getBlockEntity(base.above()) instanceof net.minecraft.world.Container c
+                ? java.util.stream.IntStream.range(0, c.getContainerSize()).mapToObj(c::getItem).filter(st -> !st.isEmpty()).toList().toString() : "?";
+        FutureBackport.LOGGER.info("[tour] golem: pos={} held={} interaction={} | copper chest={} | wooden chest={}",
+                golem == null ? "gone" : golem.position(), golem == null ? "-" : golem.getMainHandItem(),
+                golem == null ? "-" : golem.getInteraction(), source, target);
     }
 
     private static void breakHeart(MinecraftServer server, BlockPos heartPos, java.util.UUID creakingId) {

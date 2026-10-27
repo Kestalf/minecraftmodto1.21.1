@@ -3,6 +3,8 @@ package io.github.kestalf.futurebackport.block;
 import io.github.kestalf.futurebackport.registry.ModBlocks;
 import io.github.kestalf.futurebackport.registry.ModItems;
 import io.github.kestalf.futurebackport.registry.ModParticles;
+import io.github.kestalf.futurebackport.registry.ModSounds;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.StandingAndWallBlockItem;
@@ -37,6 +39,9 @@ public final class CopperFamily {
     public final Weathering<LanternBlock> lanterns;
     /** The unaffected unwaxed lightning rod is the vanilla one, so {@code lightningRods.get(UNAFFECTED)} is empty. */
     public final Weathering<LightningRodBlock> lightningRods;
+    /** Copper chests and golem statues have block entities and their own loot, so {@link #all()} leaves them out. */
+    public final Weathering<CopperChestBlock> chests;
+    public final Weathering<CopperGolemStatueBlock> statues;
     public final DeferredBlock<TorchBlock> torch;
     public final DeferredBlock<WallTorchBlock> wallTorch;
     public final DeferredItem<StandingAndWallBlockItem> torchItem;
@@ -55,6 +60,15 @@ public final class CopperFamily {
                 (state, props) -> new WeatheringLightningRodBlock(state, props), LightningRodBlock::new,
                 () -> BlockBehaviour.Properties.ofFullCopy(Blocks.LIGHTNING_ROD));
 
+        chests = Weathering.create("copper_chest", true,
+                (state, props) -> new CopperChestBlock(state, false, props), (state, props) -> new CopperChestBlock(state, true, props),
+                state -> BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).mapColor(mapColor(state)).strength(3.0F, 6.0F)
+                        .sound(net.minecraft.world.level.block.SoundType.COPPER).requiresCorrectToolForDrops());
+        statues = Weathering.create("copper_golem_statue", true,
+                (state, props) -> new CopperGolemStatueBlock(state, false, props), (state, props) -> new CopperGolemStatueBlock(state, true, props),
+                state -> BlockBehaviour.Properties.of().mapColor(mapColor(state)).strength(3.0F, 6.0F).noOcclusion()
+                        .sound(ModSounds.COPPER_GOLEM_STATUE_TYPE).pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY));
+
         torch = ModBlocks.blockNoItem("copper_torch", () -> new TorchBlock(ModParticles.COPPER_FIRE_FLAME,
                 BlockBehaviour.Properties.ofFullCopy(Blocks.TORCH)));
         wallTorch = ModBlocks.blockNoItem("copper_wall_torch", () -> new WallTorchBlock(ModParticles.COPPER_FIRE_FLAME,
@@ -65,6 +79,15 @@ public final class CopperFamily {
 
     public static CopperFamily create() {
         return new CopperFamily();
+    }
+
+    public static MapColor mapColor(WeatherState state) {
+        return switch (state) {
+            case UNAFFECTED -> MapColor.COLOR_ORANGE;
+            case EXPOSED -> MapColor.TERRACOTTA_LIGHT_GRAY;
+            case WEATHERED -> MapColor.WARPED_STEM;
+            case OXIDIZED -> MapColor.WARPED_NYLIUM;
+        };
     }
 
     /** All registered blocks of this family. */
@@ -88,17 +111,30 @@ public final class CopperFamily {
                                                      BiFunction<WeatherState, BlockBehaviour.Properties, ? extends B> weathering,
                                                      Function<BlockBehaviour.Properties, ? extends B> plain,
                                                      Supplier<BlockBehaviour.Properties> properties) {
+            return create(baseName, includeUnaffected, weathering, (state, props) -> plain.apply(props), state -> properties.get());
+        }
+
+        /** Variant where the waxed blocks also know their oxidation stage (e.g. for textures) and properties depend on it. */
+        public static <B extends Block> Weathering<B> create(String baseName, boolean includeUnaffected,
+                                                            BiFunction<WeatherState, BlockBehaviour.Properties, ? extends B> weathering,
+                                                            BiFunction<WeatherState, BlockBehaviour.Properties, ? extends B> waxed,
+                                                            Function<WeatherState, BlockBehaviour.Properties> properties) {
             Weathering<B> result = new Weathering<>();
             for (WeatherState state : WeatherState.values()) {
                 String name = prefix(state) + baseName;
                 if (state != WeatherState.UNAFFECTED || includeUnaffected) {
-                    result.unwaxed.put(state, ModBlocks.block(name, () -> weathering.apply(state, properties.get())));
+                    result.unwaxed.put(state, ModBlocks.block(name, () -> weathering.apply(state, properties.apply(state))));
                 }
             }
             for (WeatherState state : WeatherState.values()) {
-                result.waxed.put(state, ModBlocks.block("waxed_" + prefix(state) + baseName, () -> plain.apply(properties.get())));
+                result.waxed.put(state, ModBlocks.block("waxed_" + prefix(state) + baseName, () -> waxed.apply(state, properties.apply(state))));
             }
             return result;
+        }
+
+        /** The block for a stage, unwaxed or waxed. */
+        public B get(WeatherState state, boolean isWaxed) {
+            return (isWaxed ? waxed : unwaxed).get(state).get();
         }
 
         public List<DeferredBlock<B>> all() {

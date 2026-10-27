@@ -6,6 +6,7 @@ import io.github.kestalf.futurebackport.client.particle.FallingLeafParticle;
 import io.github.kestalf.futurebackport.client.particle.FireflyParticle;
 import io.github.kestalf.futurebackport.client.particle.GrowthParticle;
 import io.github.kestalf.futurebackport.client.particle.TrailParticle;
+import io.github.kestalf.futurebackport.registry.ModBlockEntities;
 import io.github.kestalf.futurebackport.registry.ModBlocks;
 import io.github.kestalf.futurebackport.registry.ModParticles;
 import net.minecraft.client.particle.FlameParticle;
@@ -24,6 +25,10 @@ import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import io.github.kestalf.futurebackport.registry.ModItems;
 import io.github.kestalf.futurebackport.registry.ModEntities;
+import io.github.kestalf.futurebackport.client.entity.CopperChestRenderer;
+import io.github.kestalf.futurebackport.client.entity.CopperGolemModel;
+import io.github.kestalf.futurebackport.client.entity.CopperGolemRenderer;
+import io.github.kestalf.futurebackport.client.entity.CopperGolemStatueRenderer;
 import io.github.kestalf.futurebackport.client.entity.CreakingModel;
 import io.github.kestalf.futurebackport.client.entity.CreakingRenderer;
 import io.github.kestalf.futurebackport.client.entity.HappyGhastHarnessModel;
@@ -90,17 +95,27 @@ public final class ClientSetup {
         event.registerLayerDefinition(ModModelLayers.HAPPY_GHAST_HARNESS, HappyGhastHarnessModel::createHarnessLayer);
         event.registerLayerDefinition(ModModelLayers.HAPPY_GHAST_ROPES, HappyGhastHarnessModel::createRopesLayer);
         event.registerLayerDefinition(ModModelLayers.CREAKING, CreakingModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.COPPER_GOLEM, CopperGolemModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.COPPER_GOLEM_SITTING, CopperGolemModel::createSittingLayer);
+        event.registerLayerDefinition(ModModelLayers.COPPER_GOLEM_RUNNING, CopperGolemModel::createRunningLayer);
+        event.registerLayerDefinition(ModModelLayers.COPPER_GOLEM_STAR, CopperGolemModel::createStarLayer);
     }
 
     @SubscribeEvent
     static void onRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.HAPPY_GHAST.get(), HappyGhastRenderer::new);
         event.registerEntityRenderer(ModEntities.CREAKING.get(), CreakingRenderer::new);
+        event.registerEntityRenderer(ModEntities.COPPER_GOLEM.get(), CopperGolemRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.COPPER_CHEST.get(), CopperChestRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.COPPER_GOLEM_STATUE.get(), CopperGolemStatueRenderer::new);
     }
 
     @SubscribeEvent
     static void onClientExtensions(RegisterClientExtensionsEvent event) {
         ModItems.SPEARS.forEach(spear -> event.registerItem(SpearClient.EXTENSIONS, spear.get()));
+        for (var weathering : List.of(ModBlocks.COPPER.chests, ModBlocks.COPPER.statues)) {
+            weathering.all().forEach(block -> event.registerItem(CopperItemRenderer.EXTENSIONS, block.get().asItem()));
+        }
     }
 
     @SubscribeEvent

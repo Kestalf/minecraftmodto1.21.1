@@ -70,6 +70,10 @@ final class VanillaTabPlacement {
             List<ItemLike> lanterns = new ArrayList<>();
             ModBlocks.COPPER.lanterns.unwaxed.values().forEach(b -> lanterns.add(b.get()));
             after(event, Items.SOUL_LANTERN, lanterns);
+            List<ItemLike> copperStorage = new ArrayList<>();
+            ModBlocks.COPPER.chests.all().forEach(b -> copperStorage.add(b.get()));
+            ModBlocks.COPPER.statues.all().forEach(b -> copperStorage.add(b.get()));
+            after(event, Items.TRAPPED_CHEST, copperStorage);
             after(event, Items.CHERRY_HANGING_SIGN, List.of(ModBlocks.PALE_OAK.signItem.get(), ModBlocks.PALE_OAK.hangingSignItem.get(),
                     ModBlocks.POPLAR.signItem.get(), ModBlocks.POPLAR.hangingSignItem.get()));
         } else if (tab == CreativeModeTabs.REDSTONE_BLOCKS) {
@@ -101,6 +105,7 @@ final class VanillaTabPlacement {
             after(event, Items.LEATHER_HORSE_ARMOR, List.of(ModItems.COPPER_HORSE_ARMOR.get()));
             after(event, Items.DIAMOND_HORSE_ARMOR, List.of(ModItems.NETHERITE_HORSE_ARMOR.get()));
         } else if (tab == CreativeModeTabs.SPAWN_EGGS) {
+            after(event, Items.COD_SPAWN_EGG, List.of(ModItems.COPPER_GOLEM_SPAWN_EGG.get()));
             after(event, Items.COW_SPAWN_EGG, List.of(ModItems.CREAKING_SPAWN_EGG.get()));
             after(event, Items.GUARDIAN_SPAWN_EGG, List.of(ModItems.HAPPY_GHAST_SPAWN_EGG.get()));
         } else if (tab == CreativeModeTabs.INGREDIENTS) {

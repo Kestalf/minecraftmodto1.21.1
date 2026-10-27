@@ -3,6 +3,7 @@ package io.github.kestalf.futurebackport.registry;
 import io.github.kestalf.futurebackport.FutureBackport;
 import io.github.kestalf.futurebackport.entity.creaking.Creaking;
 import io.github.kestalf.futurebackport.entity.ghast.HappyGhast;
+import io.github.kestalf.futurebackport.entity.golem.CopperGolem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -19,10 +20,14 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<Creaking>> CREAKING = ENTITIES.register("creaking",
             () -> EntityType.Builder.of(Creaking::new, MobCategory.MONSTER).sized(0.9F, 2.7F).eyeHeight(2.3F)
                     .clientTrackingRange(8).build("creaking"));
+    public static final DeferredHolder<EntityType<?>, EntityType<CopperGolem>> COPPER_GOLEM = ENTITIES.register("copper_golem",
+            () -> EntityType.Builder.of(CopperGolem::new, MobCategory.MISC).sized(0.49F, 0.98F).eyeHeight(0.8125F)
+                    .clientTrackingRange(10).build("copper_golem"));
 
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         event.put(HAPPY_GHAST.get(), HappyGhast.createAttributes().build());
         event.put(CREAKING.get(), Creaking.createAttributes().build());
+        event.put(COPPER_GOLEM.get(), CopperGolem.createAttributes().build());
     }
 
     private ModEntities() {

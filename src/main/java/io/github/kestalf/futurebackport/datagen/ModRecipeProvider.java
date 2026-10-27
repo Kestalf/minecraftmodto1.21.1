@@ -219,7 +219,11 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('N', ModItems.COPPER_NUGGET.get()).define('T', copper.torchItem.get())
                 .pattern("NNN").pattern("NTN").pattern("NNN")
                 .unlockedBy("has_copper_torch", has(copper.torchItem.get())).save(output);
-        for (CopperFamily.Weathering<?> weathering : List.of(copper.bars, copper.chains, copper.lanterns, copper.lightningRods)) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, copper.chests.unwaxed.get(WeatherState.UNAFFECTED).get())
+                .define('#', Items.COPPER_INGOT).define('X', Items.CHEST).pattern("###").pattern("#X#").pattern("###")
+                .unlockedBy("has_copper_ingot", has(Items.COPPER_INGOT)).save(output);
+        for (CopperFamily.Weathering<?> weathering : List.of(copper.bars, copper.chains, copper.lanterns, copper.lightningRods,
+                copper.chests, copper.statues)) {
             for (WeatherState state : WeatherState.values()) {
                 ItemLike unwaxed = weathering.unwaxed.containsKey(state) ? weathering.unwaxed.get(state).get() : Items.LIGHTNING_ROD;
                 ItemLike waxed = weathering.waxed.get(state).get();

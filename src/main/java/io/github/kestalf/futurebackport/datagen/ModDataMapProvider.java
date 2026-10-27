@@ -35,7 +35,8 @@ public class ModDataMapProvider extends DataMapProvider {
         var oxidizables = builder(NeoForgeDataMaps.OXIDIZABLES);
         var waxables = builder(NeoForgeDataMaps.WAXABLES);
         CopperFamily copper = ModBlocks.COPPER;
-        for (CopperFamily.Weathering<?> weathering : List.of(copper.bars, copper.chains, copper.lanterns, copper.lightningRods)) {
+        for (CopperFamily.Weathering<?> weathering : List.of(copper.bars, copper.chains, copper.lanterns, copper.lightningRods,
+                copper.chests, copper.statues)) {
             WeatherState[] states = WeatherState.values();
             for (int i = 0; i < states.length; i++) {
                 Block unwaxed = block(weathering, states[i]);

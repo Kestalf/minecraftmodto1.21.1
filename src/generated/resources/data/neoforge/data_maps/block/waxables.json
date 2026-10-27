@@ -6,6 +6,12 @@
     "futurebackport:copper_chain": {
       "waxed": "futurebackport:waxed_copper_chain"
     },
+    "futurebackport:copper_chest": {
+      "waxed": "futurebackport:waxed_copper_chest"
+    },
+    "futurebackport:copper_golem_statue": {
+      "waxed": "futurebackport:waxed_copper_golem_statue"
+    },
     "futurebackport:copper_lantern": {
       "waxed": "futurebackport:waxed_copper_lantern"
     },
@@ -14,6 +20,12 @@
     },
     "futurebackport:exposed_copper_chain": {
       "waxed": "futurebackport:waxed_exposed_copper_chain"
+    },
+    "futurebackport:exposed_copper_chest": {
+      "waxed": "futurebackport:waxed_exposed_copper_chest"
+    },
+    "futurebackport:exposed_copper_golem_statue": {
+      "waxed": "futurebackport:waxed_exposed_copper_golem_statue"
     },
     "futurebackport:exposed_copper_lantern": {
       "waxed": "futurebackport:waxed_exposed_copper_lantern"
@@ -27,6 +39,12 @@
     "futurebackport:oxidized_copper_chain": {
       "waxed": "futurebackport:waxed_oxidized_copper_chain"
     },
+    "futurebackport:oxidized_copper_chest": {
+      "waxed": "futurebackport:waxed_oxidized_copper_chest"
+    },
+    "futurebackport:oxidized_copper_golem_statue": {
+      "waxed": "futurebackport:waxed_oxidized_copper_golem_statue"
+    },
     "futurebackport:oxidized_copper_lantern": {
       "waxed": "futurebackport:waxed_oxidized_copper_lantern"
     },
@@ -38,6 +56,12 @@
     },
     "futurebackport:weathered_copper_chain": {
       "waxed": "futurebackport:waxed_weathered_copper_chain"
+    },
+    "futurebackport:weathered_copper_chest": {
+      "waxed": "futurebackport:waxed_weathered_copper_chest"
+    },
+    "futurebackport:weathered_copper_golem_statue": {
+      "waxed": "futurebackport:waxed_weathered_copper_golem_statue"
     },
     "futurebackport:weathered_copper_lantern": {
       "waxed": "futurebackport:waxed_weathered_copper_lantern"

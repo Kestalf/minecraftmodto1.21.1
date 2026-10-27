@@ -80,6 +80,13 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(BlockTags.BEE_GROWABLES);
         tag(ModTags.Blocks.LIGHTNING_RODS).add(Blocks.LIGHTNING_ROD);
         add(ModTags.Blocks.LIGHTNING_RODS, ModBlocks.COPPER.lightningRods.all());
+        add(ModTags.Blocks.COPPER_CHESTS, ModBlocks.COPPER.chests.all());
+        add(ModTags.Blocks.COPPER_GOLEM_STATUES, ModBlocks.COPPER.statues.all());
+        add(BlockTags.MINEABLE_WITH_PICKAXE, ModBlocks.COPPER.chests.all());
+        add(BlockTags.MINEABLE_WITH_PICKAXE, ModBlocks.COPPER.statues.all());
+        add(BlockTags.NEEDS_STONE_TOOL, ModBlocks.COPPER.chests.all());
+        add(BlockTags.GUARDED_BY_PIGLINS, ModBlocks.COPPER.chests.all());
+        add(net.neoforged.neoforge.common.Tags.Blocks.CHESTS, ModBlocks.COPPER.chests.all());
     }
 
     private void wood(WoodFamily f, TagKey<Block> logsTag) {

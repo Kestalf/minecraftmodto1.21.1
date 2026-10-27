@@ -93,6 +93,22 @@
     "futurebackport:waxed_lightning_rod",
     "futurebackport:waxed_exposed_lightning_rod",
     "futurebackport:waxed_weathered_lightning_rod",
-    "futurebackport:waxed_oxidized_lightning_rod"
+    "futurebackport:waxed_oxidized_lightning_rod",
+    "futurebackport:copper_chest",
+    "futurebackport:exposed_copper_chest",
+    "futurebackport:weathered_copper_chest",
+    "futurebackport:oxidized_copper_chest",
+    "futurebackport:waxed_copper_chest",
+    "futurebackport:waxed_exposed_copper_chest",
+    "futurebackport:waxed_weathered_copper_chest",
+    "futurebackport:waxed_oxidized_copper_chest",
+    "futurebackport:copper_golem_statue",
+    "futurebackport:exposed_copper_golem_statue",
+    "futurebackport:weathered_copper_golem_statue",
+    "futurebackport:oxidized_copper_golem_statue",
+    "futurebackport:waxed_copper_golem_statue",
+    "futurebackport:waxed_exposed_copper_golem_statue",
+    "futurebackport:waxed_weathered_copper_golem_statue",
+    "futurebackport:waxed_oxidized_copper_golem_statue"
   ]
 }
