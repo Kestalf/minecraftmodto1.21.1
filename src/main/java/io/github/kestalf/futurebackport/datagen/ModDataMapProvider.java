@@ -3,6 +3,7 @@ package io.github.kestalf.futurebackport.datagen;
 import io.github.kestalf.futurebackport.block.CopperFamily;
 import io.github.kestalf.futurebackport.block.WoodFamily;
 import io.github.kestalf.futurebackport.registry.ModBlocks;
+import io.github.kestalf.futurebackport.registry.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.ItemLike;
@@ -52,6 +53,8 @@ public class ModDataMapProvider extends DataMapProvider {
         ModBlocks.SHELVES.forEach((wood, shelf) -> {
             if (!ModBlocks.isNetherWood(wood)) fuels.add(shelf.get().asItem().builtInRegistryHolder(), new FurnaceFuel(300), false);
         });
+
+        ModItems.CUSHIONS.values().forEach(cushion -> fuels.add(cushion.get().builtInRegistryHolder(), new FurnaceFuel(50), false));
 
         var compostables = builder(NeoForgeDataMaps.COMPOSTABLES);
         for (WoodFamily f : List.of(ModBlocks.PALE_OAK, ModBlocks.POPLAR)) {

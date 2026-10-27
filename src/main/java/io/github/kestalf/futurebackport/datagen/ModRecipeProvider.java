@@ -19,6 +19,7 @@ import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -118,6 +119,17 @@ public class ModRecipeProvider extends RecipeProvider {
                         RecipeCategory.COMBAT, ModItems.NETHERITE_NAUTILUS_ARMOR.get())
                 .unlocks("has_netherite_ingot", has(Items.NETHERITE_INGOT))
                 .save(output, FutureBackport.id("netherite_nautilus_armor_smithing"));
+        for (DyeColor color : DyeColor.values()) {
+            ItemLike cushion = ModItems.CUSHIONS.get(color).get();
+            ItemLike slab = ModBlocks.WOOL_SLABS.get(color).get();
+            ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, cushion).define('#', slab).pattern("###").group("cushion")
+                    .unlockedBy(getHasName(slab), has(slab)).save(output);
+            ItemLike[] others = ModItems.CUSHIONS.entrySet().stream().filter(e -> e.getKey() != color).map(e -> (ItemLike) e.getValue().get())
+                    .toArray(ItemLike[]::new);
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, cushion).requires(DyeItem.byColor(color)).requires(Ingredient.of(others))
+                    .group("cushion_dye").unlockedBy("has_needed_dye", has(DyeItem.byColor(color)))
+                    .save(output, FutureBackport.id("dye_" + color.getSerializedName() + "_cushion"));
+        }
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.CREAKING_HEART.get()).define('L', ModBlocks.PALE_OAK.log.get())
                 .define('R', ModBlocks.RESIN_BLOCK.get()).pattern(" L ").pattern(" R ").pattern(" L ")
                 .unlockedBy("has_resin_block", has(ModBlocks.RESIN_BLOCK.get())).save(output);

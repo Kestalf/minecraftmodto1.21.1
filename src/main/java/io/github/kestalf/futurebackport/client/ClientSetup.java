@@ -31,6 +31,7 @@ import io.github.kestalf.futurebackport.client.entity.CopperGolemRenderer;
 import io.github.kestalf.futurebackport.client.entity.CopperGolemStatueRenderer;
 import io.github.kestalf.futurebackport.client.entity.CreakingModel;
 import io.github.kestalf.futurebackport.client.entity.DesertMobRenderers;
+import io.github.kestalf.futurebackport.client.entity.FarmVariantRenderers;
 import io.github.kestalf.futurebackport.client.entity.NautilusModel;
 import io.github.kestalf.futurebackport.client.entity.NautilusRenderer;
 import io.github.kestalf.futurebackport.client.entity.CreakingRenderer;
@@ -109,6 +110,10 @@ public final class ClientSetup {
         event.registerLayerDefinition(ModModelLayers.NAUTILUS_ARMOR, NautilusModel::createArmorLayer);
         event.registerLayerDefinition(ModModelLayers.ZOMBIE_NAUTILUS_CORAL, NautilusModel::createCoralLayer);
         event.registerLayerDefinition(ModModelLayers.PARCHED, DesertMobRenderers::createParchedLayer);
+        event.registerLayerDefinition(ModModelLayers.CUSHION, io.github.kestalf.futurebackport.client.entity.CushionRenderer::createLayer);
+        event.registerLayerDefinition(ModModelLayers.COLD_CHICKEN, FarmVariantRenderers::createColdChickenLayer);
+        event.registerLayerDefinition(ModModelLayers.VARIANT_COW, FarmVariantRenderers::createVariantCowLayer);
+        event.registerLayerDefinition(ModModelLayers.VARIANT_PIG, FarmVariantRenderers::createVariantPigLayer);
     }
 
     @SubscribeEvent
@@ -120,6 +125,10 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.ZOMBIE_NAUTILUS.get(), NautilusRenderer::new);
         event.registerEntityRenderer(ModEntities.CAMEL_HUSK.get(), DesertMobRenderers.CamelHuskRenderer::new);
         event.registerEntityRenderer(ModEntities.PARCHED.get(), DesertMobRenderers.ParchedRenderer::new);
+        event.registerEntityRenderer(ModEntities.CUSHION.get(), io.github.kestalf.futurebackport.client.entity.CushionRenderer::new);
+        event.registerEntityRenderer(net.minecraft.world.entity.EntityType.CHICKEN, FarmVariantRenderers.Chickens::new);
+        event.registerEntityRenderer(net.minecraft.world.entity.EntityType.COW, FarmVariantRenderers.Cows::new);
+        event.registerEntityRenderer(net.minecraft.world.entity.EntityType.PIG, FarmVariantRenderers.Pigs::new);
         event.registerBlockEntityRenderer(ModBlockEntities.COPPER_CHEST.get(), CopperChestRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.COPPER_GOLEM_STATUE.get(), CopperGolemStatueRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.SHELF.get(), io.github.kestalf.futurebackport.client.entity.ShelfRenderer::new);

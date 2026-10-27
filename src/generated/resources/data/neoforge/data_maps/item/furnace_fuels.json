@@ -9,14 +9,44 @@
     "futurebackport:birch_shelf": {
       "burn_time": 300
     },
+    "futurebackport:black_cushion": {
+      "burn_time": 50
+    },
+    "futurebackport:blue_cushion": {
+      "burn_time": 50
+    },
+    "futurebackport:brown_cushion": {
+      "burn_time": 50
+    },
     "futurebackport:cherry_shelf": {
       "burn_time": 300
+    },
+    "futurebackport:cyan_cushion": {
+      "burn_time": 50
     },
     "futurebackport:dark_oak_shelf": {
       "burn_time": 300
     },
+    "futurebackport:gray_cushion": {
+      "burn_time": 50
+    },
+    "futurebackport:green_cushion": {
+      "burn_time": 50
+    },
     "futurebackport:jungle_shelf": {
       "burn_time": 300
+    },
+    "futurebackport:light_blue_cushion": {
+      "burn_time": 50
+    },
+    "futurebackport:light_gray_cushion": {
+      "burn_time": 50
+    },
+    "futurebackport:lime_cushion": {
+      "burn_time": 50
+    },
+    "futurebackport:magenta_cushion": {
+      "burn_time": 50
     },
     "futurebackport:mangrove_shelf": {
       "burn_time": 300
@@ -24,14 +54,32 @@
     "futurebackport:oak_shelf": {
       "burn_time": 300
     },
+    "futurebackport:orange_cushion": {
+      "burn_time": 50
+    },
     "futurebackport:pale_oak_shelf": {
       "burn_time": 300
+    },
+    "futurebackport:pink_cushion": {
+      "burn_time": 50
     },
     "futurebackport:poplar_shelf": {
       "burn_time": 300
     },
+    "futurebackport:purple_cushion": {
+      "burn_time": 50
+    },
+    "futurebackport:red_cushion": {
+      "burn_time": 50
+    },
     "futurebackport:spruce_shelf": {
       "burn_time": 300
+    },
+    "futurebackport:white_cushion": {
+      "burn_time": 50
+    },
+    "futurebackport:yellow_cushion": {
+      "burn_time": 50
     }
   }
 }

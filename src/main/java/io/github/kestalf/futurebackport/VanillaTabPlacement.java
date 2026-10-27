@@ -42,6 +42,9 @@ final class VanillaTabPlacement {
                 after(event, anchor, List.of(ModBlocks.COPPER.bars.unwaxed.get(state).get(), ModBlocks.COPPER.chains.unwaxed.get(state).get()));
             }
         } else if (tab == CreativeModeTabs.COLORED_BLOCKS) {
+            List<ItemLike> cushions = new ArrayList<>();
+            ModItems.CUSHIONS.values().forEach(c -> cushions.add(c.get()));
+            after(event, Items.PINK_BED, cushions);
             for (DyeColor color : DyeColor.values()) {
                 after(event, ModBlocks.VanillaColored.wool(color),
                         List.of(ModBlocks.WOOL_STAIRS.get(color).get(), ModBlocks.WOOL_SLABS.get(color).get()));
@@ -117,6 +120,7 @@ final class VanillaTabPlacement {
             after(event, Items.ZOMBIE_HORSE_SPAWN_EGG, List.of(ModItems.ZOMBIE_NAUTILUS_SPAWN_EGG.get()));
         } else if (tab == CreativeModeTabs.INGREDIENTS) {
             after(event, Items.IRON_NUGGET, List.of(ModItems.COPPER_NUGGET.get()));
+            after(event, Items.EGG, List.of(ModItems.BLUE_EGG.get(), ModItems.BROWN_EGG.get()));
             after(event, Items.NETHER_BRICK, List.of(ModItems.RESIN_BRICK.get()));
             after(event, Items.GUSTER_BANNER_PATTERN, List.of(ModItems.FIELD_MASONED_BANNER_PATTERN.get(),
                     ModItems.BORDURE_INDENTED_BANNER_PATTERN.get()));

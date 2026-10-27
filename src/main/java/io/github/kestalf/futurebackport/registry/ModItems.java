@@ -1,6 +1,7 @@
 package io.github.kestalf.futurebackport.registry;
 
 import io.github.kestalf.futurebackport.FutureBackport;
+import io.github.kestalf.futurebackport.item.CushionItem;
 import io.github.kestalf.futurebackport.item.NautilusArmorItem;
 import io.github.kestalf.futurebackport.item.spear.SpearItem;
 import io.github.kestalf.futurebackport.item.spear.SpearMaterial;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.EggItem;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -130,6 +132,21 @@ public final class ModItems {
             () -> new DeferredSpawnEggItem(ModEntities.CAMEL_HUSK, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
     public static final DeferredItem<DeferredSpawnEggItem> PARCHED_SPAWN_EGG = ITEMS.register("parched_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntities.PARCHED, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
+
+    // ------------------------------------------------------------------ eggs of warm and cold chickens (1.21.5)
+
+    public static final DeferredItem<EggItem> BLUE_EGG = ITEMS.register("blue_egg", () -> new EggItem(new Item.Properties().stacksTo(16)));
+    public static final DeferredItem<EggItem> BROWN_EGG = ITEMS.register("brown_egg", () -> new EggItem(new Item.Properties().stacksTo(16)));
+
+    // ------------------------------------------------------------------ cushions (26.3)
+
+    public static final Map<DyeColor, DeferredItem<CushionItem>> CUSHIONS = new EnumMap<>(DyeColor.class);
+
+    static {
+        for (DyeColor color : DyeColor.values()) {
+            CUSHIONS.put(color, ITEMS.register(color.getSerializedName() + "_cushion", () -> new CushionItem(color, new Item.Properties())));
+        }
+    }
 
     // ------------------------------------------------------------------ nautilus armor (1.21.11)
 

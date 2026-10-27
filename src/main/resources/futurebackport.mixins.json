@@ -6,7 +6,9 @@
   "mixins": [
     "AgeableMobMixin",
     "CarvedPumpkinBlockMixin",
+    "ChickenMixin",
     "DrownedMixin",
+    "ThrownEggMixin",
     "ZombieMixin"
   ],
   "client": [

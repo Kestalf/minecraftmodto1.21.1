@@ -50,6 +50,15 @@ public final class ModTags {
         }
     }
 
+    public static final class Biomes {
+        public static final TagKey<net.minecraft.world.level.biome.Biome> SPAWNS_WARM_VARIANT_FARM_ANIMALS = tag("spawns_warm_variant_farm_animals");
+        public static final TagKey<net.minecraft.world.level.biome.Biome> SPAWNS_COLD_VARIANT_FARM_ANIMALS = tag("spawns_cold_variant_farm_animals");
+
+        private static TagKey<net.minecraft.world.level.biome.Biome> tag(String name) {
+            return TagKey.create(Registries.BIOME, FutureBackport.id(name));
+        }
+    }
+
     public static final class BannerPatterns {
         public static final TagKey<net.minecraft.world.level.block.entity.BannerPattern> FIELD_MASONED = tag("pattern_item/field_masoned");
         public static final TagKey<net.minecraft.world.level.block.entity.BannerPattern> BORDURE_INDENTED = tag("pattern_item/bordure_indented");

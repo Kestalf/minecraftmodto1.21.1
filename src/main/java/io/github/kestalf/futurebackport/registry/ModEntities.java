@@ -1,6 +1,7 @@
 package io.github.kestalf.futurebackport.registry;
 
 import io.github.kestalf.futurebackport.FutureBackport;
+import io.github.kestalf.futurebackport.entity.Cushion;
 import io.github.kestalf.futurebackport.entity.creaking.Creaking;
 import io.github.kestalf.futurebackport.entity.desert.CamelHusk;
 import io.github.kestalf.futurebackport.entity.desert.Parched;
@@ -48,6 +49,10 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<Parched>> PARCHED = ENTITIES.register("parched",
             () -> EntityType.Builder.of(Parched::new, MobCategory.MONSTER).sized(0.6F, 1.99F).eyeHeight(1.74F)
                     .ridingOffset(-0.7F).clientTrackingRange(8).build("parched"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<Cushion>> CUSHION = ENTITIES.register("cushion",
+            () -> EntityType.Builder.<Cushion>of(Cushion::new, MobCategory.MISC).sized(0.999F, 0.249F).noSummon()
+                    .clientTrackingRange(10).updateInterval(Integer.MAX_VALUE).build("cushion"));
 
     public static final DeferredRegister<SensorType<?>> SENSORS = DeferredRegister.create(Registries.SENSOR_TYPE, FutureBackport.MOD_ID);
     public static final DeferredHolder<SensorType<?>, SensorType<TemptingSensor>> CAMEL_HUSK_TEMPTATIONS = SENSORS.register(

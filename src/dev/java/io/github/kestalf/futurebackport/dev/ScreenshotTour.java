@@ -93,6 +93,7 @@ public final class ScreenshotTour {
         if (scenario("shelf")) addShelfScenario(server);
         if (scenario("nautilus")) addNautilusScenario(server);
         if (scenario("desert")) addDesertScenario(server);
+        if (scenario("farm")) addFarmScenario(server);
         if (scenario("creative")) addCreativeScenario(server);
     }
 
@@ -700,6 +701,83 @@ public final class ScreenshotTour {
         }));
         STEPS.add(m -> m.options.hideGui = true);
         STEPS.add(m -> shot(m, "desert_mobs"));
+    }
+
+    /** Warm and cold chickens, cows and pigs, coloured eggs and cushions. */
+    private static void addFarmScenario(MinecraftServer server) {
+        BlockPos base = ORIGIN.offset(-330, 0, 0);
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            String name = m.player.getGameProfile().getName();
+            exec(server, "gamemode spectator " + name);
+            for (int x = -10; x <= 10; x++) {
+                for (int z = -6; z <= 10; z++) {
+                    level.setBlock(base.offset(x, 0, z), Blocks.GRASS_BLOCK.defaultBlockState(), 2);
+                    for (int y = 1; y < 8; y++) level.setBlock(base.offset(x, y, z), Blocks.AIR.defaultBlockState(), 2);
+                }
+            }
+            var variants = io.github.kestalf.futurebackport.entity.variant.FarmAnimalVariant.values();
+            var types = List.<net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.animal.Animal>>of(
+                    net.minecraft.world.entity.EntityType.CHICKEN, net.minecraft.world.entity.EntityType.COW, net.minecraft.world.entity.EntityType.PIG);
+            for (int t = 0; t < types.size(); t++) {
+                for (int v = 0; v < variants.length; v++) {
+                    for (boolean baby : new boolean[]{false, true}) {
+                        var animal = types.get(t).create(level);
+                        animal.setData(io.github.kestalf.futurebackport.registry.ModAttachments.FARM_VARIANT, variants[v]);
+                        animal.moveTo(base.getX() - 6 + v * 5 + (baby ? 2 : 0), base.getY() + 1, base.getZ() + t * 3, 180, 0);
+                        if (baby) animal.setAge(-24000);
+                        animal.setNoAi(true);
+                        level.addFreshEntity(animal);
+                    }
+                }
+            }
+            // Laying and hatching.
+            var cold = net.minecraft.world.entity.EntityType.CHICKEN.create(level);
+            cold.setData(io.github.kestalf.futurebackport.registry.ModAttachments.FARM_VARIANT, variants[2]);
+            cold.moveTo(base.getX() + 8, base.getY() + 1, base.getZ() - 4, 0, 0);
+            level.addFreshEntity(cold);
+            cold.eggTime = 1;
+            cold.aiStep();
+            var eggs = level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, cold.getBoundingBox().inflate(2));
+            io.github.kestalf.futurebackport.entity.variant.FarmVariantEvents.startHatching(
+                    new net.minecraft.world.item.ItemStack(io.github.kestalf.futurebackport.registry.ModItems.BROWN_EGG.get()));
+            var chick = net.minecraft.world.entity.EntityType.CHICKEN.create(level);
+            chick.moveTo(base.getX() + 8, base.getY() + 1, base.getZ() - 2, 0, 0);
+            level.addFreshEntity(chick);
+            io.github.kestalf.futurebackport.entity.variant.FarmVariantEvents.stopHatching();
+            var natural = net.minecraft.world.entity.EntityType.PIG.create(level);
+            natural.moveTo(base.getX() + 8, base.getY() + 1, base.getZ(), 0, 0);
+            level.addFreshEntity(natural);
+            FutureBackport.LOGGER.info("[tour] farm: cold chicken laid {} | brown egg chick {} | pig here {} (biome {})",
+                    eggs.stream().map(e -> e.getItem().toString()).toList(),
+                    io.github.kestalf.futurebackport.entity.variant.FarmAnimalVariant.of(chick),
+                    io.github.kestalf.futurebackport.entity.variant.FarmAnimalVariant.of(natural), level.getBiome(natural.blockPosition()).getRegisteredName());
+            cold.discard();
+            chick.discard();
+            natural.discard();
+            // Cushions placed through the item, one on a slab.
+            var player = server.getPlayerList().getPlayers().getFirst();
+            exec(server, "gamemode creative " + name);
+            level.setBlock(base.offset(-6, 1, 8), Blocks.OAK_SLAB.defaultBlockState(), 3);
+            int placed = 0;
+            for (int i = 0; i < 4; i++) {
+                BlockPos ground = base.offset(-6 + i * 2, i == 0 ? 1 : 0, 8);
+                var stack = new net.minecraft.world.item.ItemStack(io.github.kestalf.futurebackport.registry.ModItems.CUSHIONS.get(
+                        net.minecraft.world.item.DyeColor.values()[i * 4]).get());
+                player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, stack);
+                var hit = new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(ground).add(0, 0.5, 0),
+                        net.minecraft.core.Direction.UP, ground, false);
+                var result = stack.useOn(new net.minecraft.world.item.context.UseOnContext(player, net.minecraft.world.InteractionHand.MAIN_HAND, hit));
+                if (result.consumesAction()) placed++;
+            }
+            var cushions = level.getEntitiesOfClass(io.github.kestalf.futurebackport.entity.Cushion.class, new net.minecraft.world.phys.AABB(base).inflate(12));
+            FutureBackport.LOGGER.info("[tour] cushions placed {} -> {}", placed, cushions.stream().map(c -> c.getColor() + "@" + c.getY()).toList());
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, net.minecraft.world.item.ItemStack.EMPTY);
+            exec(server, "gamemode spectator " + name);
+            exec(server, String.format(java.util.Locale.ROOT, "tp %s %d %d %d 0 25", name, base.getX(), base.getY() + 5, base.getZ() - 7));
+        }));
+        STEPS.add(m -> m.options.hideGui = true);
+        STEPS.add(m -> shot(m, "farm_variants"));
     }
 
     private static void logGolem(MinecraftServer server, java.util.UUID golemId, BlockPos base) {

@@ -25,6 +25,8 @@ public final class CommonSetup {
                 fire.setFlammable(block.get(), 60, 100);
             }
             fire.setFlammable(ModBlocks.PALE_MOSS_BLOCK.get(), 5, 100);
+            net.minecraft.world.level.block.DispenserBlock.registerProjectileBehavior(io.github.kestalf.futurebackport.registry.ModItems.BLUE_EGG.get());
+            net.minecraft.world.level.block.DispenserBlock.registerProjectileBehavior(io.github.kestalf.futurebackport.registry.ModItems.BROWN_EGG.get());
             ModBlocks.SHELVES.forEach((wood, shelf) -> {
                 if (!ModBlocks.isNetherWood(wood)) fire.setFlammable(shelf.get(), 30, 20);
             });

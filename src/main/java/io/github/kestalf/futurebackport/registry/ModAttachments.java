@@ -2,6 +2,7 @@ package io.github.kestalf.futurebackport.registry;
 
 import com.mojang.serialization.Codec;
 import io.github.kestalf.futurebackport.FutureBackport;
+import io.github.kestalf.futurebackport.entity.variant.FarmAnimalVariant;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -15,6 +16,10 @@ public final class ModAttachments {
     /** Set on baby mobs by a golden dandelion: they stop growing up ("AgeLocked" in vanilla). */
     public static final Supplier<AttachmentType<Boolean>> AGE_LOCKED = ATTACHMENT_TYPES.register("age_locked",
             () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
+
+    /** Temperate, warm or cold chicken/cow/pig; absent until the mob first joins a level. */
+    public static final Supplier<AttachmentType<FarmAnimalVariant>> FARM_VARIANT = ATTACHMENT_TYPES.register("farm_variant",
+            () -> AttachmentType.builder(() -> FarmAnimalVariant.TEMPERATE).serialize(FarmAnimalVariant.CODEC).build());
 
     private ModAttachments() {
     }
