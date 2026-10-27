@@ -25,6 +25,9 @@ public final class CommonSetup {
                 fire.setFlammable(block.get(), 60, 100);
             }
             fire.setFlammable(ModBlocks.PALE_MOSS_BLOCK.get(), 5, 100);
+            ModBlocks.SHELVES.forEach((wood, shelf) -> {
+                if (!ModBlocks.isNetherWood(wood)) fire.setFlammable(shelf.get(), 30, 20);
+            });
             ModBlocks.WOOL_STAIRS.values().forEach(b -> fire.setFlammable(b.get(), 30, 60));
             ModBlocks.WOOL_SLABS.values().forEach(b -> fire.setFlammable(b.get(), 30, 60));
 

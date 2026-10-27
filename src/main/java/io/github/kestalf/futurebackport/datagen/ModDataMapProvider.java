@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WeatheringCopper.WeatherState;
 import net.neoforged.neoforge.common.data.DataMapProvider;
 import net.neoforged.neoforge.registries.datamaps.builtin.Compostable;
+import net.neoforged.neoforge.registries.datamaps.builtin.FurnaceFuel;
 import net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps;
 import net.neoforged.neoforge.registries.datamaps.builtin.Oxidizable;
 import net.neoforged.neoforge.registries.datamaps.builtin.Strippable;
@@ -46,6 +47,11 @@ public class ModDataMapProvider extends DataMapProvider {
                 waxables.add(unwaxed.builtInRegistryHolder(), new Waxable(weathering.waxed.get(states[i]).get()), false);
             }
         }
+
+        var fuels = builder(NeoForgeDataMaps.FURNACE_FUELS);
+        ModBlocks.SHELVES.forEach((wood, shelf) -> {
+            if (!ModBlocks.isNetherWood(wood)) fuels.add(shelf.get().asItem().builtInRegistryHolder(), new FurnaceFuel(300), false);
+        });
 
         var compostables = builder(NeoForgeDataMaps.COMPOSTABLES);
         for (WoodFamily f : List.of(ModBlocks.PALE_OAK, ModBlocks.POPLAR)) {

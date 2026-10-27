@@ -1,0 +1,37 @@
+{
+  "values": {
+    "futurebackport:acacia_shelf": {
+      "burn_time": 300
+    },
+    "futurebackport:bamboo_shelf": {
+      "burn_time": 300
+    },
+    "futurebackport:birch_shelf": {
+      "burn_time": 300
+    },
+    "futurebackport:cherry_shelf": {
+      "burn_time": 300
+    },
+    "futurebackport:dark_oak_shelf": {
+      "burn_time": 300
+    },
+    "futurebackport:jungle_shelf": {
+      "burn_time": 300
+    },
+    "futurebackport:mangrove_shelf": {
+      "burn_time": 300
+    },
+    "futurebackport:oak_shelf": {
+      "burn_time": 300
+    },
+    "futurebackport:pale_oak_shelf": {
+      "burn_time": 300
+    },
+    "futurebackport:poplar_shelf": {
+      "burn_time": 300
+    },
+    "futurebackport:spruce_shelf": {
+      "burn_time": 300
+    }
+  }
+}

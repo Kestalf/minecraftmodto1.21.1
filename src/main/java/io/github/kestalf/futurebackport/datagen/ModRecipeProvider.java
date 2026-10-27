@@ -103,6 +103,16 @@ public class ModRecipeProvider extends RecipeProvider {
         net.minecraft.data.recipes.SpecialRecipeBuilder.special(io.github.kestalf.futurebackport.item.crafting.BundleDyeRecipe::new)
                 .save(output, FutureBackport.id("bundle_dye"));
 
+        java.util.Map<String, ItemLike> strippedLogs = new java.util.HashMap<>(java.util.Map.of("oak", Items.STRIPPED_OAK_LOG,
+                "spruce", Items.STRIPPED_SPRUCE_LOG, "birch", Items.STRIPPED_BIRCH_LOG, "jungle", Items.STRIPPED_JUNGLE_LOG,
+                "acacia", Items.STRIPPED_ACACIA_LOG, "dark_oak", Items.STRIPPED_DARK_OAK_LOG, "mangrove", Items.STRIPPED_MANGROVE_LOG,
+                "cherry", Items.STRIPPED_CHERRY_LOG, "bamboo", Items.STRIPPED_BAMBOO_BLOCK, "crimson", Items.STRIPPED_CRIMSON_STEM));
+        strippedLogs.put("warped", Items.STRIPPED_WARPED_STEM);
+        strippedLogs.put("pale_oak", ModBlocks.PALE_OAK.strippedLog.get());
+        strippedLogs.put("poplar", ModBlocks.POPLAR.strippedLog.get());
+        ModBlocks.SHELVES.forEach((wood, shelf) -> ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, shelf.get(), 6)
+                .define('#', strippedLogs.get(wood)).pattern("###").pattern("   ").pattern("###").group("shelf")
+                .unlockedBy(getHasName(strippedLogs.get(wood)), has(strippedLogs.get(wood))).save(output));
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.CREAKING_HEART.get()).define('L', ModBlocks.PALE_OAK.log.get())
                 .define('R', ModBlocks.RESIN_BLOCK.get()).pattern(" L ").pattern(" R ").pattern(" L ")
                 .unlockedBy("has_resin_block", has(ModBlocks.RESIN_BLOCK.get())).save(output);

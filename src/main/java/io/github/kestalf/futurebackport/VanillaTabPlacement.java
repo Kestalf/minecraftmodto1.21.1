@@ -74,6 +74,7 @@ final class VanillaTabPlacement {
             ModBlocks.COPPER.chests.all().forEach(b -> copperStorage.add(b.get()));
             ModBlocks.COPPER.statues.all().forEach(b -> copperStorage.add(b.get()));
             after(event, Items.TRAPPED_CHEST, copperStorage);
+            after(event, Items.CHISELED_BOOKSHELF, ModBlocks.SHELVES.values().stream().map(b -> (ItemLike) b.get()).toList());
             after(event, Items.CHERRY_HANGING_SIGN, List.of(ModBlocks.PALE_OAK.signItem.get(), ModBlocks.PALE_OAK.hangingSignItem.get(),
                     ModBlocks.POPLAR.signItem.get(), ModBlocks.POPLAR.hangingSignItem.get()));
         } else if (tab == CreativeModeTabs.REDSTONE_BLOCKS) {

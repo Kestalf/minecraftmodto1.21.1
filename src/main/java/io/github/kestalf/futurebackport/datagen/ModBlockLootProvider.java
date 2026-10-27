@@ -50,6 +50,7 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
             add(family.slab().get(), this::createSlabItemTable);
         }
         dropSelf(ModBlocks.DRIED_GHAST.get());
+        ModBlocks.SHELVES.values().forEach(b -> dropSelf(b.get()));
         var fortune = registries.lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
                 .getOrThrow(net.minecraft.world.item.enchantment.Enchantments.FORTUNE);
         add(ModBlocks.CREAKING_HEART.get(), block -> createSilkTouchDispatchTable(block, applyExplosionDecay(block,

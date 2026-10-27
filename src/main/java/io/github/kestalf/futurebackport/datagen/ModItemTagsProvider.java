@@ -28,6 +28,7 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         copy(ModTags.Blocks.PALE_OAK_LOGS, ModTags.Items.PALE_OAK_LOGS);
         copy(ModTags.Blocks.POPLAR_LOGS, ModTags.Items.POPLAR_LOGS);
+        copy(ModTags.Blocks.WOODEN_SHELVES, ModTags.Items.WOODEN_SHELVES);
         copy(BlockTags.LOGS_THAT_BURN, ItemTags.LOGS_THAT_BURN);
         copy(BlockTags.PLANKS, ItemTags.PLANKS);
         copy(BlockTags.WOODEN_STAIRS, ItemTags.WOODEN_STAIRS);

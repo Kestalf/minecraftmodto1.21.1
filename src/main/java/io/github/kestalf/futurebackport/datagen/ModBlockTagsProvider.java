@@ -81,6 +81,8 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(ModTags.Blocks.LIGHTNING_RODS).add(Blocks.LIGHTNING_ROD);
         add(ModTags.Blocks.LIGHTNING_RODS, ModBlocks.COPPER.lightningRods.all());
         add(ModTags.Blocks.COPPER_CHESTS, ModBlocks.COPPER.chests.all());
+        add(ModTags.Blocks.WOODEN_SHELVES, List.copyOf(ModBlocks.SHELVES.values()));
+        add(BlockTags.MINEABLE_WITH_AXE, List.copyOf(ModBlocks.SHELVES.values()));
         add(ModTags.Blocks.COPPER_GOLEM_STATUES, ModBlocks.COPPER.statues.all());
         add(BlockTags.MINEABLE_WITH_PICKAXE, ModBlocks.COPPER.chests.all());
         add(BlockTags.MINEABLE_WITH_PICKAXE, ModBlocks.COPPER.statues.all());

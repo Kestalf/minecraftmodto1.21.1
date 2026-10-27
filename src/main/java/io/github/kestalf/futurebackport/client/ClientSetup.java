@@ -68,6 +68,7 @@ public final class ClientSetup {
                 ModBlocks.CACTUS_FLOWER, ModBlocks.GOLDEN_DANDELION, ModBlocks.POTTED_GOLDEN_DANDELION, ModBlocks.RED_SHRUB,
                 ModBlocks.SHELF_MUSHROOM));
         cutout.add(ModBlocks.DRIED_GHAST);
+        cutout.addAll(ModBlocks.SHELVES.values());
         cutout.addAll(ModBlocks.COPPER.lanterns.all());
         cutout.add(ModBlocks.COPPER.torch);
         cutout.add(ModBlocks.COPPER.wallTorch);
@@ -108,6 +109,7 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.COPPER_GOLEM.get(), CopperGolemRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.COPPER_CHEST.get(), CopperChestRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.COPPER_GOLEM_STATUE.get(), CopperGolemStatueRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.SHELF.get(), io.github.kestalf.futurebackport.client.entity.ShelfRenderer::new);
     }
 
     @SubscribeEvent

@@ -90,6 +90,7 @@ public final class ScreenshotTour {
         if (scenario("ghast")) addGhastScenario(server);
         if (scenario("creaking")) addCreakingScenario(server);
         if (scenario("golem")) addGolemScenario(server);
+        if (scenario("shelf")) addShelfScenario(server);
         if (scenario("creative")) addCreativeScenario(server);
     }
 
@@ -500,6 +501,69 @@ public final class ScreenshotTour {
             player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, net.minecraft.world.item.ItemStack.EMPTY);
         }));
         STEPS.add(m -> shot(m, "statue_reanimated"));
+    }
+
+    /** Shelf checks: slot swapping, comparator output, powered chains of three and swapping a chain with the hotbar. */
+    private static void addShelfScenario(MinecraftServer server) {
+        BlockPos base = ORIGIN.offset(-210, 0, 0);
+        var south = net.minecraft.core.Direction.SOUTH;
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            String name = m.player.getGameProfile().getName();
+            exec(server, "gamemode survival " + name);
+            for (int x = -8; x <= 8; x++) {
+                for (int z = -6; z <= 8; z++) {
+                    level.setBlock(base.offset(x, 0, z), Blocks.GRASS_BLOCK.defaultBlockState(), 2);
+                    for (int y = 1; y < 6; y++) level.setBlock(base.offset(x, y, z), Blocks.AIR.defaultBlockState(), 2);
+                }
+            }
+            var shelves = new java.util.ArrayList<>(ModBlocks.SHELVES.values());
+            // A single unpowered shelf filled through the real interaction, plus every wood type for the textures.
+            for (int i = 0; i < shelves.size(); i++) {
+                level.setBlock(base.offset(-6 + i, 2, 0), shelves.get(i).get().defaultBlockState()
+                        .setValue(io.github.kestalf.futurebackport.block.ShelfBlock.FACING, south), 3);
+            }
+            var player = server.getPlayerList().getPlayers().getFirst();
+            BlockPos single = base.offset(-6, 2, 0);
+            var items = new net.minecraft.world.item.Item[]{net.minecraft.world.item.Items.DIAMOND, net.minecraft.world.item.Items.COBBLESTONE,
+                    net.minecraft.world.item.Items.APPLE};
+            for (int slot = 0; slot < 3; slot++) {
+                // South-facing: the viewer's left is west (-x).
+                double x = single.getX() + 0.5 + (slot - 1) * 0.33;
+                var hit = new net.minecraft.world.phys.BlockHitResult(new net.minecraft.world.phys.Vec3(x, single.getY() + 0.5, single.getZ() + 0.9),
+                        south, single, false);
+                var stack = new net.minecraft.world.item.ItemStack(items[slot], 5);
+                player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, stack);
+                level.getBlockState(single).useItemOn(stack, level, player, net.minecraft.world.InteractionHand.MAIN_HAND, hit);
+            }
+            var shelf = (io.github.kestalf.futurebackport.block.entity.ShelfBlockEntity) level.getBlockEntity(single);
+            FutureBackport.LOGGER.info("[tour] shelf slots: {} {} {} comparator={} hand={}", shelf.getItem(0), shelf.getItem(1), shelf.getItem(2),
+                    level.getBlockState(single).getAnalogOutputSignal(level, single), player.getMainHandItem());
+            // Three powered shelves join into one chain.
+            for (int i = 0; i < 3; i++) {
+                BlockPos pos = base.offset(-1 + i, 1, 4);
+                level.setBlock(pos.north(), Blocks.REDSTONE_BLOCK.defaultBlockState(), 3);
+                level.setBlock(pos, shelves.get(0).get().defaultBlockState().setValue(io.github.kestalf.futurebackport.block.ShelfBlock.FACING, south), 3);
+            }
+            FutureBackport.LOGGER.info("[tour] powered row: {} | {} | {}", level.getBlockState(base.offset(-1, 1, 4)), level.getBlockState(base.offset(0, 1, 4)),
+                    level.getBlockState(base.offset(1, 1, 4)));
+            for (int i = 0; i < 9; i++) {
+                player.getInventory().setItem(i, new net.minecraft.world.item.ItemStack(
+                        net.minecraft.core.registries.BuiltInRegistries.ITEM.byId(20 + i * 7), i + 1));
+            }
+            String before = player.getInventory().items.subList(0, 9).toString();
+            BlockPos middle = base.offset(0, 1, 4);
+            var hit = new net.minecraft.world.phys.BlockHitResult(new net.minecraft.world.phys.Vec3(middle.getX() + 0.5, middle.getY() + 0.5,
+                    middle.getZ() + 0.9), south, middle, false);
+            level.getBlockState(middle).useItemOn(player.getMainHandItem(), level, player, net.minecraft.world.InteractionHand.MAIN_HAND, hit);
+            FutureBackport.LOGGER.info("[tour] hotbar before={} after={}", before, player.getInventory().items.subList(0, 9));
+            exec(server, String.format(java.util.Locale.ROOT, "tp %s %d %.1f %d 180 15", name, base.getX(), base.getY() + 2.5, base.getZ() + 7));
+        }));
+        STEPS.add(m -> m.options.hideGui = true);
+        STEPS.add(m -> shot(m, "shelves"));
+        STEPS.add(m -> run(server, String.format(java.util.Locale.ROOT, "tp %s %.1f %.1f %.1f 180 10", m.player.getGameProfile().getName(),
+                base.getX() - 5.5, base.getY() + 2.6, base.getZ() + 2.2)));
+        STEPS.add(m -> shot(m, "shelf_closeup"));
     }
 
     private static void logGolem(MinecraftServer server, java.util.UUID golemId, BlockPos base) {

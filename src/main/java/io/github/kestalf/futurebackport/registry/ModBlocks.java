@@ -4,6 +4,7 @@ import io.github.kestalf.futurebackport.FutureBackport;
 import io.github.kestalf.futurebackport.block.CopperFamily;
 import io.github.kestalf.futurebackport.block.CreakingHeartBlock;
 import io.github.kestalf.futurebackport.block.DriedGhastBlock;
+import io.github.kestalf.futurebackport.block.ShelfBlock;
 import io.github.kestalf.futurebackport.block.StoneFamily;
 import io.github.kestalf.futurebackport.block.WoodFamily;
 import net.minecraft.world.item.DyeColor;
@@ -184,6 +185,37 @@ public final class ModBlocks {
     public static final DeferredBlock<DriedGhastBlock> DRIED_GHAST = block("dried_ghast", () -> new DriedGhastBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instabreak().sound(ModSounds.DRIED_GHAST_TYPE).noOcclusion()
                     .randomTicks()));
+
+    // ------------------------------------------------------------------ shelves (1.21.9)
+
+    /** Shelf per wood, keyed by the wood name (e.g. {@code oak} for {@code oak_shelf}). */
+    public static final Map<String, DeferredBlock<ShelfBlock>> SHELVES = new java.util.LinkedHashMap<>();
+
+    static {
+        Map<String, Supplier<Block>> planks = new java.util.LinkedHashMap<>();
+        planks.put("oak", () -> Blocks.OAK_PLANKS);
+        planks.put("spruce", () -> Blocks.SPRUCE_PLANKS);
+        planks.put("birch", () -> Blocks.BIRCH_PLANKS);
+        planks.put("jungle", () -> Blocks.JUNGLE_PLANKS);
+        planks.put("acacia", () -> Blocks.ACACIA_PLANKS);
+        planks.put("dark_oak", () -> Blocks.DARK_OAK_PLANKS);
+        planks.put("mangrove", () -> Blocks.MANGROVE_PLANKS);
+        planks.put("cherry", () -> Blocks.CHERRY_PLANKS);
+        planks.put("pale_oak", () -> PALE_OAK.planks.get());
+        planks.put("poplar", () -> POPLAR.planks.get());
+        planks.put("bamboo", () -> Blocks.BAMBOO_MOSAIC);
+        planks.put("crimson", () -> Blocks.CRIMSON_PLANKS);
+        planks.put("warped", () -> Blocks.WARPED_PLANKS);
+        planks.forEach((wood, plank) -> SHELVES.put(wood, block(wood + "_shelf", () -> {
+            BlockBehaviour.Properties props = BlockBehaviour.Properties.of().mapColor(plank.get().defaultMapColor())
+                    .instrument(NoteBlockInstrument.BASS).sound(SoundType.CHISELED_BOOKSHELF).strength(2.0F, 3.0F);
+            return new ShelfBlock(isNetherWood(wood) ? props : props.ignitedByLava());
+        })));
+    }
+
+    public static boolean isNetherWood(String wood) {
+        return wood.equals("crimson") || wood.equals("warped");
+    }
 
     // ------------------------------------------------------------------ registration helpers
 
