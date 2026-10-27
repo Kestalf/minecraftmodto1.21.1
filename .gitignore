@@ -1,0 +1,30 @@
+# Gradle
+.gradle/
+build/
+out/
+bin/
+run/
+runs/
+run-data/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs / crash reports
+logs/
+crash-reports/
+*.log
+
+# Data generator cache
+src/generated/resources/.cache/

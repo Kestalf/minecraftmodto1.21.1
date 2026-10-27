@@ -1,0 +1,12 @@
+{
+  "values": [
+    "minecraft:lightning_rod",
+    "futurebackport:exposed_lightning_rod",
+    "futurebackport:weathered_lightning_rod",
+    "futurebackport:oxidized_lightning_rod",
+    "futurebackport:waxed_lightning_rod",
+    "futurebackport:waxed_exposed_lightning_rod",
+    "futurebackport:waxed_weathered_lightning_rod",
+    "futurebackport:waxed_oxidized_lightning_rod"
+  ]
+}

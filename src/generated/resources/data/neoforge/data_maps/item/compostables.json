@@ -1,0 +1,67 @@
+{
+  "values": {
+    "futurebackport:bush": {
+      "chance": 0.3
+    },
+    "futurebackport:cactus_flower": {
+      "chance": 0.3
+    },
+    "futurebackport:closed_eyeblossom": {
+      "chance": 0.65
+    },
+    "futurebackport:firefly_bush": {
+      "chance": 0.3
+    },
+    "futurebackport:golden_dandelion": {
+      "chance": 0.65
+    },
+    "futurebackport:leaf_litter": {
+      "chance": 0.3
+    },
+    "futurebackport:open_eyeblossom": {
+      "chance": 0.65
+    },
+    "futurebackport:orange_poplar_leaves": {
+      "chance": 0.3
+    },
+    "futurebackport:pale_hanging_moss": {
+      "chance": 0.3
+    },
+    "futurebackport:pale_moss_block": {
+      "chance": 0.65
+    },
+    "futurebackport:pale_moss_carpet": {
+      "chance": 0.3
+    },
+    "futurebackport:pale_oak_leaves": {
+      "chance": 0.3
+    },
+    "futurebackport:pale_oak_sapling": {
+      "chance": 0.3
+    },
+    "futurebackport:poplar_sapling": {
+      "chance": 0.3
+    },
+    "futurebackport:red_poplar_leaves": {
+      "chance": 0.3
+    },
+    "futurebackport:red_shrub": {
+      "chance": 0.3
+    },
+    "futurebackport:shelf_mushroom": {
+      "chance": 0.65
+    },
+    "futurebackport:short_dry_grass": {
+      "chance": 0.3
+    },
+    "futurebackport:tall_dry_grass": {
+      "chance": 0.5
+    },
+    "futurebackport:wildflowers": {
+      "chance": 0.3
+    },
+    "futurebackport:yellow_poplar_leaves": {
+      "chance": 0.3
+    }
+  }
+}

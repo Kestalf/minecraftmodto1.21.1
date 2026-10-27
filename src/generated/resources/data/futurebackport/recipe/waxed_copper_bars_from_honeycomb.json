@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "waxed_copper_bars",
+  "ingredients": [
+    {
+      "item": "futurebackport:copper_bars"
+    },
+    {
+      "item": "minecraft:honeycomb"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "futurebackport:waxed_copper_bars"
+  }
+}

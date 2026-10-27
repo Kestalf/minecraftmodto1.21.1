@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "default": {
+      "feature": "futurebackport:yellow_poplar",
+      "placement": []
+    },
+    "features": [
+      {
+        "chance": 0.33,
+        "feature": {
+          "feature": "futurebackport:red_poplar",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.5,
+        "feature": {
+          "feature": "futurebackport:orange_poplar",
+          "placement": []
+        }
+      }
+    ]
+  }
+}

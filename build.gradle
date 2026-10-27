@@ -1,0 +1,130 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = "${mod_id}-${minecraft_version}"
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+// Textures, sounds and translations of the newer vanilla releases are not stored in git:
+// they are pulled from Mojang's servers into this directory at build time (see buildSrc).
+def importedAssetsDir = layout.buildDirectory.dir('generated/vanillaAssets')
+
+def importVanillaAssets = tasks.register('importVanillaAssets', io.github.kestalf.futurebackport.gradle.ImportVanillaAssetsTask) {
+    group = 'futurebackport'
+    description = 'Downloads textures, sounds and translations of new content from the official Minecraft client.'
+    modId.set(project.mod_id)
+    sourceVersion.set(project.vanilla_assets_version)
+    baseVersion.set(project.minecraft_version)
+    remapFile.set(file('vanilla-assets.json'))
+    overrideRoots.from('src/main/resources', 'src/generated/resources')
+    extraLangDir.from('src/main/lang')
+    cacheDir.set(new File(gradle.gradleUserHomeDir, 'caches/futurebackport-vanilla'))
+    outputDir.set(importedAssetsDir)
+}
+
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+    srcDir importVanillaAssets
+}
+
+neoForge {
+    version = project.neo_version
+
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
+
+    accessTransformers = files('src/main/resources/META-INF/accesstransformer.cfg')
+
+    runs {
+        client {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+        server {
+            server()
+            programArgument '--nogui'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+        data {
+            data()
+            programArguments.addAll '--mod', project.mod_id, '--all',
+                    '--output', file('src/generated/resources/').getAbsolutePath(),
+                    '--existing', file('src/main/resources/').getAbsolutePath(),
+                    '--existing', importedAssetsDir.get().asFile.getAbsolutePath()
+        }
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.INFO
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
+dependencies {
+}
+
+def metadataProperties = [
+        minecraft_version      : minecraft_version,
+        minecraft_version_range: minecraft_version_range,
+        neo_version            : neo_version,
+        neo_version_range      : neo_version_range,
+        loader_version_range   : loader_version_range,
+        mod_id                 : mod_id,
+        mod_name               : mod_name,
+        mod_license            : mod_license,
+        mod_version            : mod_version,
+        mod_authors            : mod_authors,
+        mod_description        : mod_description
+]
+
+def generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
+    inputs.properties metadataProperties
+    expand metadataProperties
+    from 'src/main/templates'
+    into 'build/generated/sources/modMetadata'
+}
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+jar {
+    manifest {
+        attributes([
+                'Specification-Title'   : mod_id,
+                'Specification-Vendor'  : mod_authors,
+                'Specification-Version' : '1',
+                'Implementation-Title'  : project.name,
+                'Implementation-Version': project.jar.archiveVersion,
+                'Implementation-Vendor' : mod_authors
+        ])
+    }
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}

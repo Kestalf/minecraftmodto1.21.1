@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "waxed_oxidized_copper_chain",
+  "ingredients": [
+    {
+      "item": "futurebackport:oxidized_copper_chain"
+    },
+    {
+      "item": "minecraft:honeycomb"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "futurebackport:waxed_oxidized_copper_chain"
+  }
+}

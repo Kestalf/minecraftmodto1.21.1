@@ -1,0 +1,40 @@
+{
+  "values": {
+    "futurebackport:copper_bars": {
+      "next_oxidation_stage": "futurebackport:exposed_copper_bars"
+    },
+    "futurebackport:copper_chain": {
+      "next_oxidation_stage": "futurebackport:exposed_copper_chain"
+    },
+    "futurebackport:copper_lantern": {
+      "next_oxidation_stage": "futurebackport:exposed_copper_lantern"
+    },
+    "futurebackport:exposed_copper_bars": {
+      "next_oxidation_stage": "futurebackport:weathered_copper_bars"
+    },
+    "futurebackport:exposed_copper_chain": {
+      "next_oxidation_stage": "futurebackport:weathered_copper_chain"
+    },
+    "futurebackport:exposed_copper_lantern": {
+      "next_oxidation_stage": "futurebackport:weathered_copper_lantern"
+    },
+    "futurebackport:exposed_lightning_rod": {
+      "next_oxidation_stage": "futurebackport:weathered_lightning_rod"
+    },
+    "futurebackport:weathered_copper_bars": {
+      "next_oxidation_stage": "futurebackport:oxidized_copper_bars"
+    },
+    "futurebackport:weathered_copper_chain": {
+      "next_oxidation_stage": "futurebackport:oxidized_copper_chain"
+    },
+    "futurebackport:weathered_copper_lantern": {
+      "next_oxidation_stage": "futurebackport:oxidized_copper_lantern"
+    },
+    "futurebackport:weathered_lightning_rod": {
+      "next_oxidation_stage": "futurebackport:oxidized_lightning_rod"
+    },
+    "minecraft:lightning_rod": {
+      "next_oxidation_stage": "futurebackport:exposed_lightning_rod"
+    }
+  }
+}

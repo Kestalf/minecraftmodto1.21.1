@@ -1,0 +1,52 @@
+{
+  "values": {
+    "futurebackport:copper_bars": {
+      "waxed": "futurebackport:waxed_copper_bars"
+    },
+    "futurebackport:copper_chain": {
+      "waxed": "futurebackport:waxed_copper_chain"
+    },
+    "futurebackport:copper_lantern": {
+      "waxed": "futurebackport:waxed_copper_lantern"
+    },
+    "futurebackport:exposed_copper_bars": {
+      "waxed": "futurebackport:waxed_exposed_copper_bars"
+    },
+    "futurebackport:exposed_copper_chain": {
+      "waxed": "futurebackport:waxed_exposed_copper_chain"
+    },
+    "futurebackport:exposed_copper_lantern": {
+      "waxed": "futurebackport:waxed_exposed_copper_lantern"
+    },
+    "futurebackport:exposed_lightning_rod": {
+      "waxed": "futurebackport:waxed_exposed_lightning_rod"
+    },
+    "futurebackport:oxidized_copper_bars": {
+      "waxed": "futurebackport:waxed_oxidized_copper_bars"
+    },
+    "futurebackport:oxidized_copper_chain": {
+      "waxed": "futurebackport:waxed_oxidized_copper_chain"
+    },
+    "futurebackport:oxidized_copper_lantern": {
+      "waxed": "futurebackport:waxed_oxidized_copper_lantern"
+    },
+    "futurebackport:oxidized_lightning_rod": {
+      "waxed": "futurebackport:waxed_oxidized_lightning_rod"
+    },
+    "futurebackport:weathered_copper_bars": {
+      "waxed": "futurebackport:waxed_weathered_copper_bars"
+    },
+    "futurebackport:weathered_copper_chain": {
+      "waxed": "futurebackport:waxed_weathered_copper_chain"
+    },
+    "futurebackport:weathered_copper_lantern": {
+      "waxed": "futurebackport:waxed_weathered_copper_lantern"
+    },
+    "futurebackport:weathered_lightning_rod": {
+      "waxed": "futurebackport:waxed_weathered_lightning_rod"
+    },
+    "minecraft:lightning_rod": {
+      "waxed": "futurebackport:waxed_lightning_rod"
+    }
+  }
+}

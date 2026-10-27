@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "futurebackport:block/poplar_sign_particle"
+    }
+  }
+}

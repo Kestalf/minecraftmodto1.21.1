@@ -1,0 +1,100 @@
+{
+  "_comment": "Controls which assets of the newer official client are imported at build time (see buildSrc/ImportVanillaAssetsTask).",
+  "exclude_blocks": [
+    "test_block",
+    "test_instance_block",
+    "iron_chain"
+  ],
+  "exclude_items": [],
+  "exclude_texture_prefixes": [
+    "gui/realms/",
+    "gui/title/",
+    "environment/"
+  ],
+  "exclude_sound_prefixes": [
+    "music.",
+    "ui.",
+    "item.goat_horn."
+  ],
+  "force_textures": [],
+  "languages": [
+    "ru_ru",
+    "uk_ua",
+    "be_by",
+    "kk_kz",
+    "de_de",
+    "fr_fr",
+    "es_es",
+    "es_mx",
+    "pt_br",
+    "pt_pt",
+    "it_it",
+    "pl_pl",
+    "cs_cz",
+    "nl_nl",
+    "sv_se",
+    "tr_tr",
+    "zh_cn",
+    "zh_tw",
+    "ja_jp",
+    "ko_kr"
+  ],
+  "patch_models": {
+    "item/template_chest": {
+      "parent": "minecraft:builtin/entity",
+      "gui_light": "front"
+    },
+    "item/template_copper_golem_statue": {
+      "parent": "minecraft:builtin/entity",
+      "gui_light": "front"
+    }
+  },
+  "copy": {
+    "textures/entity/equipment/horse_body/copper.png": "textures/entity/horse/armor/horse_armor_copper.png",
+    "textures/entity/equipment/horse_body/netherite.png": "textures/entity/horse/armor/horse_armor_netherite.png"
+  },
+  "layout_conversions": [
+    {
+      "old": "entity/signs/{}.png",
+      "new": "block/{}_sign.png",
+      "examples": [
+        "oak",
+        "spruce",
+        "birch",
+        "jungle",
+        "acacia",
+        "dark_oak",
+        "mangrove",
+        "cherry",
+        "bamboo",
+        "crimson",
+        "warped"
+      ],
+      "targets": [
+        "pale_oak",
+        "poplar"
+      ]
+    },
+    {
+      "old": "entity/signs/hanging/{}.png",
+      "new": "block/{}_hanging_sign.png",
+      "examples": [
+        "oak",
+        "spruce",
+        "birch",
+        "jungle",
+        "acacia",
+        "dark_oak",
+        "mangrove",
+        "cherry",
+        "bamboo",
+        "crimson",
+        "warped"
+      ],
+      "targets": [
+        "pale_oak",
+        "poplar"
+      ]
+    }
+  ]
+}

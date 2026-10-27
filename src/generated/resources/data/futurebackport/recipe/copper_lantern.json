@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "N": {
+      "item": "futurebackport:copper_nugget"
+    },
+    "T": {
+      "item": "futurebackport:copper_torch"
+    }
+  },
+  "pattern": [
+    "NNN",
+    "NTN",
+    "NNN"
+  ],
+  "result": {
+    "count": 1,
+    "id": "futurebackport:copper_lantern"
+  }
+}

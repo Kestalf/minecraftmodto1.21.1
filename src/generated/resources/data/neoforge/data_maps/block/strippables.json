@@ -1,0 +1,16 @@
+{
+  "values": {
+    "futurebackport:pale_oak_log": {
+      "stripped_block": "futurebackport:stripped_pale_oak_log"
+    },
+    "futurebackport:pale_oak_wood": {
+      "stripped_block": "futurebackport:stripped_pale_oak_wood"
+    },
+    "futurebackport:poplar_log": {
+      "stripped_block": "futurebackport:stripped_poplar_log"
+    },
+    "futurebackport:poplar_wood": {
+      "stripped_block": "futurebackport:stripped_poplar_wood"
+    }
+  }
+}
