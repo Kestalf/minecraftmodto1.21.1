@@ -50,6 +50,14 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
             add(family.slab().get(), this::createSlabItemTable);
         }
         dropSelf(ModBlocks.DRIED_GHAST.get());
+        var fortune = registries.lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
+                .getOrThrow(net.minecraft.world.item.enchantment.Enchantments.FORTUNE);
+        add(ModBlocks.CREAKING_HEART.get(), block -> createSilkTouchDispatchTable(block, applyExplosionDecay(block,
+                LootItem.lootTableItem(ModBlocks.RESIN_CLUMP.get())
+                        .apply(SetItemCountFunction.setCount(net.minecraft.world.level.storage.loot.providers.number.UniformGenerator.between(1, 3)))
+                        .apply(net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.addUniformBonusCount(fortune))
+                        .apply(net.minecraft.world.level.storage.loot.functions.LimitCount.limitCount(
+                                net.minecraft.world.level.storage.loot.IntRange.upperBound(9))))));
         for (var b : List.of(ModBlocks.CHISELED_RESIN_BRICKS, ModBlocks.CHISELED_CINNABAR, ModBlocks.CHISELED_SULFUR, ModBlocks.RESIN_BLOCK,
                 ModBlocks.PALE_MOSS_BLOCK)) {
             dropSelf(b.get());

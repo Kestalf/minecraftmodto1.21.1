@@ -116,6 +116,8 @@ public final class ModItems {
 
     public static final DeferredItem<DeferredSpawnEggItem> HAPPY_GHAST_SPAWN_EGG = ITEMS.register("happy_ghast_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntities.HAPPY_GHAST, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
+    public static final DeferredItem<DeferredSpawnEggItem> CREAKING_SPAWN_EGG = ITEMS.register("creaking_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.CREAKING, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
 
     // ------------------------------------------------------------------ helpers
 

@@ -76,7 +76,7 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         add(BlockTags.INSIDE_STEP_SOUND_BLOCKS, ModBlocks.LEAF_LITTER);
         add(BlockTags.COMBINATION_STEP_SOUND_BLOCKS, ModBlocks.PALE_MOSS_CARPET);
         add(BlockTags.ENDERMAN_HOLDABLE, ModBlocks.OPEN_EYEBLOSSOM, ModBlocks.CLOSED_EYEBLOSSOM);
-        add(BlockTags.MINEABLE_WITH_AXE, ModBlocks.SHELF_MUSHROOM);
+        add(BlockTags.MINEABLE_WITH_AXE, ModBlocks.SHELF_MUSHROOM, ModBlocks.CREAKING_HEART);
         tag(BlockTags.BEE_GROWABLES);
         tag(ModTags.Blocks.LIGHTNING_RODS).add(Blocks.LIGHTNING_ROD);
         add(ModTags.Blocks.LIGHTNING_RODS, ModBlocks.COPPER.lightningRods.all());

@@ -7,6 +7,10 @@
         "ground_probability": 0.8,
         "probability": 0.15,
         "trunk_probability": 0.4
+      },
+      {
+        "type": "futurebackport:creaking_heart",
+        "probability": 1.0
       }
     ],
     "dirt_provider": {

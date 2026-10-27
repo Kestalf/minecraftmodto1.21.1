@@ -1,6 +1,7 @@
 package io.github.kestalf.futurebackport.worldgen;
 
 import io.github.kestalf.futurebackport.FutureBackport;
+import io.github.kestalf.futurebackport.worldgen.tree.CreakingHeartDecorator;
 import io.github.kestalf.futurebackport.worldgen.tree.PaleMossDecorator;
 import io.github.kestalf.futurebackport.worldgen.tree.PoplarFoliagePlacer;
 import net.minecraft.core.registries.Registries;
@@ -19,6 +20,8 @@ public final class ModWorldgen {
             FOLIAGE_PLACERS.register("poplar_foliage_placer", () -> new FoliagePlacerType<>(PoplarFoliagePlacer.CODEC));
     public static final DeferredHolder<TreeDecoratorType<?>, TreeDecoratorType<PaleMossDecorator>> PALE_MOSS =
             TREE_DECORATORS.register("pale_moss", () -> new TreeDecoratorType<>(PaleMossDecorator.CODEC));
+    public static final DeferredHolder<TreeDecoratorType<?>, TreeDecoratorType<CreakingHeartDecorator>> CREAKING_HEART =
+            TREE_DECORATORS.register("creaking_heart", () -> new TreeDecoratorType<>(CreakingHeartDecorator.CODEC));
 
     public static void register(IEventBus modBus) {
         FOLIAGE_PLACERS.register(modBus);

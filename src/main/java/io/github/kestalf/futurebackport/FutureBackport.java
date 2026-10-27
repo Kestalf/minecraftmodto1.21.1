@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import io.github.kestalf.futurebackport.network.ModNetwork;
 import io.github.kestalf.futurebackport.registry.ModArmorMaterials;
 import io.github.kestalf.futurebackport.registry.ModAttachments;
+import io.github.kestalf.futurebackport.registry.ModBlockEntities;
 import io.github.kestalf.futurebackport.registry.ModBlocks;
 import io.github.kestalf.futurebackport.registry.ModCreativeTabs;
 import io.github.kestalf.futurebackport.registry.ModEntities;
@@ -27,6 +28,7 @@ public final class FutureBackport {
         ModSounds.SOUNDS.register(modBus);
         ModSounds.registerImported();
         ModBlocks.BLOCKS.register(modBus);
+        ModBlockEntities.BLOCK_ENTITIES.register(modBus);
         ModEntities.ENTITIES.register(modBus);
         ModItems.ITEMS.register(modBus);
         ModArmorMaterials.MATERIALS.register(modBus);

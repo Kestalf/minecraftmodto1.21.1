@@ -43,6 +43,8 @@ public final class ScreenshotTour {
     private static final BlockPos ORIGIN = new BlockPos(0, 250, 0);
     private static final List<Consumer<Minecraft>> STEPS = new ArrayList<>();
     private static int waitTicks = -1;
+    /** Ticks to wait after the current step; a step may shorten it. */
+    private static int nextWait = 60;
     private static int step;
     /** Work queued on the integrated server by the current step; the tour waits until it is done. */
     private static java.util.concurrent.CompletableFuture<?> pending = java.util.concurrent.CompletableFuture.completedFuture(null);
@@ -66,7 +68,8 @@ public final class ScreenshotTour {
             return;
         }
         STEPS.get(step++).accept(mc);
-        waitTicks = 60;
+        waitTicks = nextWait;
+        nextWait = 60;
     }
 
     private static void buildPlan(Minecraft mc) {
@@ -85,6 +88,7 @@ public final class ScreenshotTour {
         if (scenario("gallery")) addGallery(server, blocks, rows);
         if (scenario("spear")) addSpearScenario(server);
         if (scenario("ghast")) addGhastScenario(server);
+        if (scenario("creaking")) addCreakingScenario(server);
         if (scenario("creative")) addCreativeScenario(server);
     }
 
@@ -302,6 +306,106 @@ public final class ScreenshotTour {
         } catch (ReflectiveOperationException e) {
             FutureBackport.LOGGER.error("Could not select the creative tab", e);
         }
+    }
+
+    /**
+     * Creaking checks: an awake heart spawns a creaking at night, looking at it freezes and activates it, hitting it
+     * is blocked and grows resin, and breaking the heart makes it crumble.
+     */
+    private static void addCreakingScenario(MinecraftServer server) {
+        BlockPos base = ORIGIN.offset(-130, 0, 0);
+        BlockPos heartPos = base.above(2);
+        java.util.UUID[] creakingId = new java.util.UUID[1];
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            String name = m.player.getGameProfile().getName();
+            exec(server, "gamemode spectator " + name);
+            for (int x = -18; x <= 18; x++) {
+                for (int z = -18; z <= 18; z++) {
+                    level.setBlock(base.offset(x, 0, z), Blocks.GRASS_BLOCK.defaultBlockState(), 2);
+                    for (int y = 1; y < 12; y++) level.setBlock(base.offset(x, y, z), Blocks.AIR.defaultBlockState(), 2);
+                }
+            }
+            BlockState log = ModBlocks.PALE_OAK.log.get().defaultBlockState();
+            level.setBlock(heartPos.below(), log, 3);
+            level.setBlock(heartPos.above(), log, 3);
+            level.setBlock(heartPos, ModBlocks.CREAKING_HEART.get().defaultBlockState(), 3);
+            exec(server, String.format(java.util.Locale.ROOT, "tp %s %d %d %d 180 10", name, heartPos.getX(), base.getY() + 1,
+                    heartPos.getZ() + 4));
+            exec(server, "gamemode survival " + name);
+            exec(server, "effect give " + name + " minecraft:resistance infinite 255 true");
+            exec(server, "time set 18000");
+            exec(server, "gamerule doMobSpawning true");
+        }));
+        STEPS.add(m -> shot(m, "creaking_heart"));
+        STEPS.add(m -> {
+            // Look away so the creaking can walk.
+            String name = m.player.getGameProfile().getName();
+            run(server, "execute as " + name + " at @s run tp @s ~ ~ ~ 0 10");
+        });
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            var creakings = level.getEntitiesOfClass(io.github.kestalf.futurebackport.entity.creaking.Creaking.class,
+                    new net.minecraft.world.phys.AABB(base).inflate(24));
+            FutureBackport.LOGGER.info("[tour] creaking heart state={} creakings={}", level.getBlockState(heartPos), creakings.size());
+            if (level.getBlockEntity(heartPos) instanceof io.github.kestalf.futurebackport.block.entity.CreakingHeartBlockEntity heart) {
+                heart.getCreakingProtector().ifPresentOrElse(c -> FutureBackport.LOGGER.info("[tour] heart protector {} removed={} alive={} pos={}",
+                        c, c.getRemovalReason(), c.isAlive(), c.position()), () -> FutureBackport.LOGGER.info("[tour] heart has no protector"));
+            }
+            if (!creakings.isEmpty()) {
+                var creaking = creakings.getFirst();
+                creakingId[0] = creaking.getUUID();
+                FutureBackport.LOGGER.info("[tour] creaking at {} home={} canMove={} active={}", creaking.position(), creaking.getHomePos(),
+                        creaking.canMove(), creaking.isActive());
+                exec(server, String.format(java.util.Locale.ROOT, "tp %s %.1f %.1f %.1f facing entity %s eyes",
+                        m.player.getGameProfile().getName(), creaking.getX() + 3, creaking.getY(), creaking.getZ() + 3, creaking.getUUID()));
+            }
+        }));
+        STEPS.add(m -> pending = server.submit(() -> {
+            if (creakingId[0] == null) return;
+            var creaking = (io.github.kestalf.futurebackport.entity.creaking.Creaking) server.overworld().getEntity(creakingId[0]);
+            FutureBackport.LOGGER.info("[tour] looked at: canMove={} active={}", creaking.canMove(), creaking.isActive());
+            // Stand in front of it for the screenshots.
+            var front = creaking.position().add(net.minecraft.world.phys.Vec3.directionFromRotation(0, creaking.yBodyRot).scale(4));
+            exec(server, String.format(java.util.Locale.ROOT, "tp %s %.2f %.2f %.2f facing entity %s feet",
+                    m.player.getGameProfile().getName(), front.x, creaking.getY() + 0.5, front.z, creaking.getUUID()));
+        }));
+        STEPS.add(m -> m.options.hideGui = true);
+        STEPS.add(m -> shot(m, "creaking_watched"));
+        STEPS.add(m -> pending = server.submit(() -> {
+            if (creakingId[0] == null) return;
+            ServerLevel level = server.overworld();
+            var creaking = (io.github.kestalf.futurebackport.entity.creaking.Creaking) level.getEntity(creakingId[0]);
+            var player = server.getPlayerList().getPlayers().getFirst();
+            player.attack(creaking);
+            int resin = 0;
+            for (BlockPos pos : BlockPos.betweenClosed(heartPos.offset(-3, -3, -3), heartPos.offset(3, 3, 3))) {
+                if (level.getBlockState(pos).is(ModBlocks.RESIN_CLUMP.get())) resin++;
+            }
+            FutureBackport.LOGGER.info("[tour] hit creaking: alive={} health={} resin clumps={}", creaking.isAlive(), creaking.getHealth(), resin);
+        }));
+        STEPS.add(m -> shot(m, "creaking_hit"));
+        STEPS.add(m -> {
+            nextWait = 15;
+            pending = server.submit(() -> breakHeart(server, heartPos, creakingId[0]));
+        });
+        STEPS.add(m -> shot(m, "creaking_twitch"));
+        STEPS.add(m -> pending = server.submit(() -> {
+            if (creakingId[0] == null) return;
+            FutureBackport.LOGGER.info("[tour] after heart broken: creaking present={}", server.overworld().getEntity(creakingId[0]) != null);
+            exec(server, "gamerule doMobSpawning false");
+            exec(server, "time set 6000");
+        }));
+    }
+
+    private static void breakHeart(MinecraftServer server, BlockPos heartPos, java.util.UUID creakingId) {
+        if (creakingId == null) return;
+        var player = server.getPlayerList().getPlayers().getFirst();
+        exec(server, "gamemode creative " + player.getGameProfile().getName());
+        player.gameMode.destroyBlock(heartPos);
+        var creaking = (io.github.kestalf.futurebackport.entity.creaking.Creaking) server.overworld().getEntity(creakingId);
+        FutureBackport.LOGGER.info("[tour] heart broken: tearingDown={} health={}", creaking == null ? "gone" : creaking.isTearingDown(),
+                creaking == null ? 0 : creaking.getHealth());
     }
 
     private static void shot(Minecraft mc, String name) {

@@ -2,6 +2,7 @@ package io.github.kestalf.futurebackport.registry;
 
 import io.github.kestalf.futurebackport.FutureBackport;
 import io.github.kestalf.futurebackport.block.CopperFamily;
+import io.github.kestalf.futurebackport.block.CreakingHeartBlock;
 import io.github.kestalf.futurebackport.block.DriedGhastBlock;
 import io.github.kestalf.futurebackport.block.StoneFamily;
 import io.github.kestalf.futurebackport.block.WoodFamily;
@@ -89,6 +90,9 @@ public final class ModBlocks {
     public static final DeferredBlock<ResinClumpBlock> RESIN_CLUMP = block("resin_clump", () -> new ResinClumpBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).replaceable().noCollission().sound(ModSounds.RESIN_TYPE)
                     .ignitedByLava().pushReaction(PushReaction.DESTROY)));
+    public static final DeferredBlock<CreakingHeartBlock> CREAKING_HEART = block("creaking_heart", () -> new CreakingHeartBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).instrument(NoteBlockInstrument.BASEDRUM).strength(10.0F)
+                    .sound(ModSounds.CREAKING_HEART_TYPE)));
     public static final DeferredBlock<Block> RESIN_BLOCK = block("resin_block", () -> new Block(
             BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).instrument(NoteBlockInstrument.BASEDRUM)
                     .sound(ModSounds.RESIN_TYPE)));

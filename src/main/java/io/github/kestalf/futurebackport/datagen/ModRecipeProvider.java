@@ -103,6 +103,9 @@ public class ModRecipeProvider extends RecipeProvider {
         net.minecraft.data.recipes.SpecialRecipeBuilder.special(io.github.kestalf.futurebackport.item.crafting.BundleDyeRecipe::new)
                 .save(output, FutureBackport.id("bundle_dye"));
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.CREAKING_HEART.get()).define('L', ModBlocks.PALE_OAK.log.get())
+                .define('R', ModBlocks.RESIN_BLOCK.get()).pattern(" L ").pattern(" R ").pattern(" L ")
+                .unlockedBy("has_resin_block", has(ModBlocks.RESIN_BLOCK.get())).save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.DRIED_GHAST.get()).define('#', Items.GHAST_TEAR)
                 .define('X', Items.SOUL_SAND).pattern("###").pattern("#X#").pattern("###")
                 .unlockedBy("has_ghast_tear", has(Items.GHAST_TEAR)).save(output);

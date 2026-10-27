@@ -5,6 +5,7 @@ import io.github.kestalf.futurebackport.block.WoodFamily;
 import io.github.kestalf.futurebackport.client.particle.FallingLeafParticle;
 import io.github.kestalf.futurebackport.client.particle.FireflyParticle;
 import io.github.kestalf.futurebackport.client.particle.GrowthParticle;
+import io.github.kestalf.futurebackport.client.particle.TrailParticle;
 import io.github.kestalf.futurebackport.registry.ModBlocks;
 import io.github.kestalf.futurebackport.registry.ModParticles;
 import net.minecraft.client.particle.FlameParticle;
@@ -23,6 +24,8 @@ import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import io.github.kestalf.futurebackport.registry.ModItems;
 import io.github.kestalf.futurebackport.registry.ModEntities;
+import io.github.kestalf.futurebackport.client.entity.CreakingModel;
+import io.github.kestalf.futurebackport.client.entity.CreakingRenderer;
 import io.github.kestalf.futurebackport.client.entity.HappyGhastHarnessModel;
 import io.github.kestalf.futurebackport.client.entity.HappyGhastModel;
 import io.github.kestalf.futurebackport.client.entity.HappyGhastRenderer;
@@ -78,6 +81,7 @@ public final class ClientSetup {
         event.registerSpriteSet(ModParticles.FIREFLY, FireflyParticle.Provider::new);
         event.registerSpriteSet(ModParticles.PAUSE_MOB_GROWTH, sprites -> new GrowthParticle.Provider(sprites, -0.04));
         event.registerSpriteSet(ModParticles.RESET_MOB_GROWTH, sprites -> new GrowthParticle.Provider(sprites, 0.04));
+        event.registerSpriteSet(ModParticles.TRAIL, TrailParticle.Provider::new);
     }
 
     @SubscribeEvent
@@ -85,11 +89,13 @@ public final class ClientSetup {
         event.registerLayerDefinition(ModModelLayers.HAPPY_GHAST, HappyGhastModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.HAPPY_GHAST_HARNESS, HappyGhastHarnessModel::createHarnessLayer);
         event.registerLayerDefinition(ModModelLayers.HAPPY_GHAST_ROPES, HappyGhastHarnessModel::createRopesLayer);
+        event.registerLayerDefinition(ModModelLayers.CREAKING, CreakingModel::createBodyLayer);
     }
 
     @SubscribeEvent
     static void onRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.HAPPY_GHAST.get(), HappyGhastRenderer::new);
+        event.registerEntityRenderer(ModEntities.CREAKING.get(), CreakingRenderer::new);
     }
 
     @SubscribeEvent

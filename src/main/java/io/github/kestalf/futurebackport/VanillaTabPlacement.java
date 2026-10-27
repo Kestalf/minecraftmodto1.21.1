@@ -63,7 +63,7 @@ final class VanillaTabPlacement {
             after(event, Items.DEAD_BUSH, List.of(ModBlocks.SHORT_DRY_GRASS.get(), ModBlocks.TALL_DRY_GRASS.get()));
             after(event, Items.CACTUS, List.of(ModBlocks.CACTUS_FLOWER.get()));
             after(event, Items.BROWN_MUSHROOM, List.of(ModBlocks.SHELF_MUSHROOM.get()));
-            after(event, Items.GLOW_LICHEN, List.of(ModBlocks.RESIN_CLUMP.get(), ModBlocks.RESIN_BLOCK.get()));
+            after(event, Items.GLOW_LICHEN, List.of(ModBlocks.RESIN_CLUMP.get(), ModBlocks.RESIN_BLOCK.get(), ModBlocks.CREAKING_HEART.get()));
             after(event, Items.TUFF, List.of(ModBlocks.CINNABAR.base().get(), ModBlocks.SULFUR.base().get()));
         } else if (tab == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             after(event, Items.SOUL_TORCH, List.of(ModBlocks.COPPER.torchItem.get()));
@@ -100,6 +100,9 @@ final class VanillaTabPlacement {
                     ModItems.COPPER_LEGGINGS.get(), ModItems.COPPER_BOOTS.get()));
             after(event, Items.LEATHER_HORSE_ARMOR, List.of(ModItems.COPPER_HORSE_ARMOR.get()));
             after(event, Items.DIAMOND_HORSE_ARMOR, List.of(ModItems.NETHERITE_HORSE_ARMOR.get()));
+        } else if (tab == CreativeModeTabs.SPAWN_EGGS) {
+            after(event, Items.COW_SPAWN_EGG, List.of(ModItems.CREAKING_SPAWN_EGG.get()));
+            after(event, Items.GUARDIAN_SPAWN_EGG, List.of(ModItems.HAPPY_GHAST_SPAWN_EGG.get()));
         } else if (tab == CreativeModeTabs.INGREDIENTS) {
             after(event, Items.IRON_NUGGET, List.of(ModItems.COPPER_NUGGET.get()));
             after(event, Items.NETHER_BRICK, List.of(ModItems.RESIN_BRICK.get()));

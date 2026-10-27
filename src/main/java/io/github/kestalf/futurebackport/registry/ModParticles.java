@@ -1,9 +1,13 @@
 package io.github.kestalf.futurebackport.registry;
 
+import com.mojang.serialization.MapCodec;
 import io.github.kestalf.futurebackport.FutureBackport;
+import io.github.kestalf.futurebackport.particle.TrailParticleOption;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -28,9 +32,23 @@ public final class ModParticles {
     public static final SimpleParticleType GEYSER_PLUME = simple("geyser_plume", true);
     public static final SimpleParticleType GEYSER_POOF = simple("geyser_poof", true);
     public static final SimpleParticleType SULFUR_CUBE_GOO = simple("sulfur_cube_goo", false);
+    public static final ParticleType<TrailParticleOption> TRAIL = register("trail", new ParticleType<>(false) {
+        @Override
+        public MapCodec<TrailParticleOption> codec() {
+            return TrailParticleOption.CODEC;
+        }
+
+        @Override
+        public StreamCodec<? super RegistryFriendlyByteBuf, TrailParticleOption> streamCodec() {
+            return TrailParticleOption.STREAM_CODEC;
+        }
+    });
 
     private static SimpleParticleType simple(String name, boolean overrideLimiter) {
-        SimpleParticleType type = new SimpleParticleType(overrideLimiter);
+        return register(name, new SimpleParticleType(overrideLimiter));
+    }
+
+    private static <T extends ParticleType<?>> T register(String name, T type) {
         PARTICLES.register(name, () -> type);
         return type;
     }

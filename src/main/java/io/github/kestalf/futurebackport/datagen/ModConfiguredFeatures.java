@@ -3,6 +3,7 @@ package io.github.kestalf.futurebackport.datagen;
 import io.github.kestalf.futurebackport.block.WoodFamily;
 import io.github.kestalf.futurebackport.registry.ModBlocks;
 import io.github.kestalf.futurebackport.worldgen.ModFeatureKeys;
+import io.github.kestalf.futurebackport.worldgen.tree.CreakingHeartDecorator;
 import io.github.kestalf.futurebackport.worldgen.tree.PaleMossDecorator;
 import io.github.kestalf.futurebackport.worldgen.tree.PoplarFoliagePlacer;
 import net.minecraft.core.HolderGetter;
@@ -44,7 +45,7 @@ public final class ModConfiguredFeatures {
         register(context, ModFeatureKeys.PALE_OAK, Feature.TREE, paleOak()
                 .decorators(List.of(new PaleMossDecorator(0.15F, 0.4F, 0.8F))).build());
         register(context, ModFeatureKeys.PALE_OAK_CREAKING, Feature.TREE, paleOak()
-                .decorators(List.of(new PaleMossDecorator(0.15F, 0.4F, 0.8F))).build());
+                .decorators(List.of(new PaleMossDecorator(0.15F, 0.4F, 0.8F), new CreakingHeartDecorator(1.0F))).build());
 
         WoodFamily poplar = ModBlocks.POPLAR;
         register(context, ModFeatureKeys.RED_POPLAR, Feature.TREE, poplar(poplar.leaves.get(0).get()).build());
