@@ -29,6 +29,7 @@ public final class ModTags {
         public static final TagKey<Item> HAPPY_GHAST_FOOD = tag("happy_ghast_food");
         public static final TagKey<Item> HAPPY_GHAST_TEMPT_ITEMS = tag("happy_ghast_tempt_items");
         public static final TagKey<Item> WOODEN_SHELVES = tag("wooden_shelves");
+        public static final TagKey<Item> ENCHANTABLE_LUNGE = tag("enchantable/lunge");
 
         private static TagKey<Item> tag(String name) {
             return TagKey.create(Registries.ITEM, FutureBackport.id(name));
@@ -42,6 +43,15 @@ public final class ModTags {
 
         private static TagKey<EntityType<?>> tag(String name) {
             return TagKey.create(Registries.ENTITY_TYPE, FutureBackport.id(name));
+        }
+    }
+
+    public static final class BannerPatterns {
+        public static final TagKey<net.minecraft.world.level.block.entity.BannerPattern> FIELD_MASONED = tag("pattern_item/field_masoned");
+        public static final TagKey<net.minecraft.world.level.block.entity.BannerPattern> BORDURE_INDENTED = tag("pattern_item/bordure_indented");
+
+        private static TagKey<net.minecraft.world.level.block.entity.BannerPattern> tag(String name) {
+            return TagKey.create(Registries.BANNER_PATTERN, FutureBackport.id(name));
         }
     }
 

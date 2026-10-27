@@ -1,14 +1,16 @@
 {
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
-  "group": "red_dye",
   "ingredients": [
     {
-      "item": "futurebackport:red_shrub"
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:bricks"
     }
   ],
   "result": {
     "count": 1,
-    "id": "minecraft:red_dye"
+    "id": "futurebackport:field_masoned_banner_pattern"
   }
 }

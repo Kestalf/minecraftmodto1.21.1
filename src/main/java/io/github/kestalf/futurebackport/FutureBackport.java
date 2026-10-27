@@ -1,11 +1,15 @@
 package io.github.kestalf.futurebackport;
 
 import com.mojang.logging.LogUtils;
+import io.github.kestalf.futurebackport.network.ModNetwork;
+import io.github.kestalf.futurebackport.registry.ModArmorMaterials;
 import io.github.kestalf.futurebackport.registry.ModAttachments;
 import io.github.kestalf.futurebackport.registry.ModBlocks;
 import io.github.kestalf.futurebackport.registry.ModCreativeTabs;
+import io.github.kestalf.futurebackport.registry.ModEntities;
 import io.github.kestalf.futurebackport.registry.ModItems;
 import io.github.kestalf.futurebackport.registry.ModParticles;
+import io.github.kestalf.futurebackport.registry.ModRecipes;
 import io.github.kestalf.futurebackport.registry.ModSounds;
 import io.github.kestalf.futurebackport.worldgen.ModWorldgen;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +27,10 @@ public final class FutureBackport {
         ModSounds.SOUNDS.register(modBus);
         ModSounds.registerImported();
         ModBlocks.BLOCKS.register(modBus);
+        ModEntities.ENTITIES.register(modBus);
         ModItems.ITEMS.register(modBus);
+        ModArmorMaterials.MATERIALS.register(modBus);
+        ModRecipes.SERIALIZERS.register(modBus);
         ModParticles.PARTICLES.register(modBus);
         ModAttachments.ATTACHMENT_TYPES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);
@@ -32,6 +39,8 @@ public final class FutureBackport {
         modBus.addListener(CommonSetup::onCommonSetup);
         modBus.addListener(CommonSetup::onBlockEntityTypeAddBlocks);
         modBus.addListener(CommonSetup::onBuildCreativeTabs);
+        modBus.addListener(ModNetwork::register);
+        modBus.addListener(ModEntities::registerAttributes);
     }
 
     public static ResourceLocation id(String path) {

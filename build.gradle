@@ -13,6 +13,14 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
+// Development-only code (e.g. the screenshot tour used to check rendering); never packaged into the mod jar.
+sourceSets {
+    dev {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
 // Textures, sounds and translations of the newer vanilla releases are not stored in git:
 // they are pulled from Mojang's servers into this directory at build time (see buildSrc).
 def importedAssetsDir = layout.buildDirectory.dir('generated/vanillaAssets')
@@ -55,6 +63,13 @@ neoForge {
             programArgument '--nogui'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
+        tour {
+            client()
+            sourceSet = sourceSets.dev
+            programArguments.addAll '--quickPlaySingleplayer', 'tour', '--width', '1280', '--height', '720'
+            systemProperty 'futurebackport.tour', project.findProperty('tour') ?: 'all'
+            systemProperty 'futurebackport.debugSpears', 'true'
+        }
         data {
             data()
             programArguments.addAll '--mod', project.mod_id, '--all',
@@ -71,9 +86,12 @@ neoForge {
     mods {
         "${mod_id}" {
             sourceSet(sourceSets.main)
+            sourceSet(sourceSets.dev)
         }
     }
 }
+
+neoForge.addModdingDependenciesTo(sourceSets.dev)
 
 configurations {
     runtimeClasspath.extendsFrom localRuntime

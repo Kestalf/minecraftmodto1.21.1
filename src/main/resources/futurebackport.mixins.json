@@ -7,6 +7,7 @@
     "AgeableMobMixin"
   ],
   "client": [
+    "client.LocalPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

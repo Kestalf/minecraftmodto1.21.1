@@ -2,6 +2,7 @@ package io.github.kestalf.futurebackport.registry;
 
 import io.github.kestalf.futurebackport.FutureBackport;
 import io.github.kestalf.futurebackport.block.CopperFamily;
+import io.github.kestalf.futurebackport.block.DriedGhastBlock;
 import io.github.kestalf.futurebackport.block.StoneFamily;
 import io.github.kestalf.futurebackport.block.WoodFamily;
 import net.minecraft.world.item.DyeColor;
@@ -173,6 +174,12 @@ public final class ModBlocks {
     // ------------------------------------------------------------------ copper
 
     public static final CopperFamily COPPER = CopperFamily.create();
+
+    // ------------------------------------------------------------------ happy ghast (1.21.6)
+
+    public static final DeferredBlock<DriedGhastBlock> DRIED_GHAST = block("dried_ghast", () -> new DriedGhastBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instabreak().sound(ModSounds.DRIED_GHAST_TYPE).noOcclusion()
+                    .randomTicks()));
 
     // ------------------------------------------------------------------ registration helpers
 

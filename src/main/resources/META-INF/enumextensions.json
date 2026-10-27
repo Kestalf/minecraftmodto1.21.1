@@ -17,6 +17,15 @@
         "class": "io/github/kestalf/futurebackport/registry/ModBoatTypes",
         "field": "POPLAR"
       }
+    },
+    {
+      "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
+      "name": "FUTUREBACKPORT_SPEAR_CHARGE",
+      "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+      "parameters": {
+        "class": "io/github/kestalf/futurebackport/client/ModArmPoses",
+        "field": "SPEAR_CHARGE"
+      }
     }
   ]
 }

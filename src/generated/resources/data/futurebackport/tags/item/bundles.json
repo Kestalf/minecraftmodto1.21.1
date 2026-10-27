@@ -1,0 +1,21 @@
+{
+  "values": [
+    "minecraft:bundle",
+    "futurebackport:white_bundle",
+    "futurebackport:orange_bundle",
+    "futurebackport:magenta_bundle",
+    "futurebackport:light_blue_bundle",
+    "futurebackport:yellow_bundle",
+    "futurebackport:lime_bundle",
+    "futurebackport:pink_bundle",
+    "futurebackport:gray_bundle",
+    "futurebackport:light_gray_bundle",
+    "futurebackport:cyan_bundle",
+    "futurebackport:purple_bundle",
+    "futurebackport:blue_bundle",
+    "futurebackport:brown_bundle",
+    "futurebackport:green_bundle",
+    "futurebackport:red_bundle",
+    "futurebackport:black_bundle"
+  ]
+}

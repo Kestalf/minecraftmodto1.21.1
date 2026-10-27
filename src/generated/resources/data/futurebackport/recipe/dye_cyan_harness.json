@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "group": "harness_dye",
+  "ingredients": [
+    {
+      "tag": "futurebackport:harnesses"
+    },
+    {
+      "item": "minecraft:cyan_dye"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "futurebackport:cyan_harness"
+  }
+}

@@ -20,6 +20,14 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import io.github.kestalf.futurebackport.registry.ModItems;
+import io.github.kestalf.futurebackport.registry.ModEntities;
+import io.github.kestalf.futurebackport.client.entity.HappyGhastHarnessModel;
+import io.github.kestalf.futurebackport.client.entity.HappyGhastModel;
+import io.github.kestalf.futurebackport.client.entity.HappyGhastRenderer;
+import io.github.kestalf.futurebackport.client.entity.ModModelLayers;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -51,6 +59,7 @@ public final class ClientSetup {
                 ModBlocks.WILDFLOWERS, ModBlocks.BUSH, ModBlocks.FIREFLY_BUSH, ModBlocks.SHORT_DRY_GRASS, ModBlocks.TALL_DRY_GRASS,
                 ModBlocks.CACTUS_FLOWER, ModBlocks.GOLDEN_DANDELION, ModBlocks.POTTED_GOLDEN_DANDELION, ModBlocks.RED_SHRUB,
                 ModBlocks.SHELF_MUSHROOM));
+        cutout.add(ModBlocks.DRIED_GHAST);
         cutout.addAll(ModBlocks.COPPER.lanterns.all());
         cutout.add(ModBlocks.COPPER.torch);
         cutout.add(ModBlocks.COPPER.wallTorch);
@@ -69,6 +78,23 @@ public final class ClientSetup {
         event.registerSpriteSet(ModParticles.FIREFLY, FireflyParticle.Provider::new);
         event.registerSpriteSet(ModParticles.PAUSE_MOB_GROWTH, sprites -> new GrowthParticle.Provider(sprites, -0.04));
         event.registerSpriteSet(ModParticles.RESET_MOB_GROWTH, sprites -> new GrowthParticle.Provider(sprites, 0.04));
+    }
+
+    @SubscribeEvent
+    static void onLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(ModModelLayers.HAPPY_GHAST, HappyGhastModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.HAPPY_GHAST_HARNESS, HappyGhastHarnessModel::createHarnessLayer);
+        event.registerLayerDefinition(ModModelLayers.HAPPY_GHAST_ROPES, HappyGhastHarnessModel::createRopesLayer);
+    }
+
+    @SubscribeEvent
+    static void onRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(ModEntities.HAPPY_GHAST.get(), HappyGhastRenderer::new);
+    }
+
+    @SubscribeEvent
+    static void onClientExtensions(RegisterClientExtensionsEvent event) {
+        ModItems.SPEARS.forEach(spear -> event.registerItem(SpearClient.EXTENSIONS, spear.get()));
     }
 
     @SubscribeEvent

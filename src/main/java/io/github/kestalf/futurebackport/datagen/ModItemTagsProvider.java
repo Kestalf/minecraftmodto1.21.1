@@ -54,6 +54,32 @@ public class ModItemTagsProvider extends ItemTagsProvider {
             tag(ItemTags.BOATS).add(f.boat.get());
             tag(ItemTags.CHEST_BOATS).add(f.chestBoat.get());
         }
+        var spears = tag(ModTags.Items.SPEARS);
+        ModItems.SPEARS.forEach(spear -> spears.add(spear.get()));
+        tag(ModTags.Items.ENCHANTABLE_LUNGE).addTag(ModTags.Items.SPEARS);
+        for (TagKey<Item> enchantable : List.of(ItemTags.SHARP_WEAPON_ENCHANTABLE, ItemTags.WEAPON_ENCHANTABLE, ItemTags.FIRE_ASPECT_ENCHANTABLE,
+                ItemTags.DURABILITY_ENCHANTABLE, ItemTags.VANISHING_ENCHANTABLE)) {
+            tag(enchantable).addTag(ModTags.Items.SPEARS);
+        }
+        tag(ItemTags.PIGLIN_LOVED).add(ModItems.GOLDEN_SPEAR.get());
+        tag(ItemTags.SWORDS).add(ModItems.COPPER_SWORD.get());
+        tag(ItemTags.SHOVELS).add(ModItems.COPPER_SHOVEL.get());
+        tag(ItemTags.PICKAXES).add(ModItems.COPPER_PICKAXE.get());
+        tag(ItemTags.AXES).add(ModItems.COPPER_AXE.get());
+        tag(ItemTags.HOES).add(ModItems.COPPER_HOE.get());
+        tag(ItemTags.HEAD_ARMOR).add(ModItems.COPPER_HELMET.get());
+        tag(ItemTags.CHEST_ARMOR).add(ModItems.COPPER_CHESTPLATE.get());
+        tag(ItemTags.LEG_ARMOR).add(ModItems.COPPER_LEGGINGS.get());
+        tag(ItemTags.FOOT_ARMOR).add(ModItems.COPPER_BOOTS.get());
+        tag(ItemTags.TRIMMABLE_ARMOR).add(ModItems.COPPER_HELMET.get(), ModItems.COPPER_CHESTPLATE.get(), ModItems.COPPER_LEGGINGS.get(),
+                ModItems.COPPER_BOOTS.get());
+        var harnesses = tag(ModTags.Items.HARNESSES);
+        ModItems.HARNESSES.values().forEach(h -> harnesses.add(h.get()));
+        var bundles = tag(ModTags.Items.BUNDLES).add(net.minecraft.world.item.Items.BUNDLE);
+        ModItems.BUNDLES.values().forEach(b -> bundles.add(b.get()));
+        tag(ModTags.Items.HAPPY_GHAST_FOOD).add(net.minecraft.world.item.Items.SNOWBALL);
+        tag(ModTags.Items.HAPPY_GHAST_TEMPT_ITEMS).addTag(ModTags.Items.HAPPY_GHAST_FOOD).addTag(ModTags.Items.HARNESSES);
+
         TagKey<Item> copperNuggets = ItemTags.create(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("c", "nuggets/copper"));
         tag(copperNuggets).add(ModItems.COPPER_NUGGET.get());
         tag(ItemTags.create(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("c", "nuggets"))).addTag(copperNuggets);

@@ -79,9 +79,32 @@ final class VanillaTabPlacement {
         } else if (tab == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             after(event, Items.CHERRY_CHEST_BOAT, List.of(ModBlocks.PALE_OAK.boat.get(), ModBlocks.PALE_OAK.chestBoat.get(),
                     ModBlocks.POPLAR.boat.get(), ModBlocks.POPLAR.chestBoat.get()));
+            after(event, Items.STONE_HOE, List.of(ModItems.COPPER_SHOVEL.get(), ModItems.COPPER_PICKAXE.get(), ModItems.COPPER_AXE.get(),
+                    ModItems.COPPER_HOE.get()));
+            List<ItemLike> bundles = new ArrayList<>();
+            if (!contains(event, Items.BUNDLE)) bundles.add(Items.BUNDLE);
+            ModItems.BUNDLES.values().forEach(b -> bundles.add(b.get()));
+            after(event, Items.LEAD, bundles);
+            after(event, Items.MUSIC_DISC_PIGSTEP, List.of(ModItems.MUSIC_DISC_TEARS.get(), ModItems.MUSIC_DISC_LAVA_CHICKEN.get(),
+                    ModItems.MUSIC_DISC_BOUNCE.get()));
+            List<ItemLike> harnesses = new ArrayList<>();
+            ModItems.HARNESSES.values().forEach(h -> harnesses.add(h.get()));
+            after(event, Items.SADDLE, harnesses);
+        } else if (tab == CreativeModeTabs.COMBAT) {
+            after(event, Items.STONE_SWORD, List.of(ModItems.COPPER_SWORD.get()));
+            after(event, Items.STONE_AXE, List.of(ModItems.COPPER_AXE.get()));
+            List<ItemLike> spears = new ArrayList<>();
+            ModItems.SPEARS.forEach(s -> spears.add(s.get()));
+            after(event, Items.TRIDENT, spears);
+            after(event, Items.LEATHER_BOOTS, List.of(ModItems.COPPER_HELMET.get(), ModItems.COPPER_CHESTPLATE.get(),
+                    ModItems.COPPER_LEGGINGS.get(), ModItems.COPPER_BOOTS.get()));
+            after(event, Items.LEATHER_HORSE_ARMOR, List.of(ModItems.COPPER_HORSE_ARMOR.get()));
+            after(event, Items.DIAMOND_HORSE_ARMOR, List.of(ModItems.NETHERITE_HORSE_ARMOR.get()));
         } else if (tab == CreativeModeTabs.INGREDIENTS) {
             after(event, Items.IRON_NUGGET, List.of(ModItems.COPPER_NUGGET.get()));
             after(event, Items.NETHER_BRICK, List.of(ModItems.RESIN_BRICK.get()));
+            after(event, Items.GUSTER_BANNER_PATTERN, List.of(ModItems.FIELD_MASONED_BANNER_PATTERN.get(),
+                    ModItems.BORDURE_INDENTED_BANNER_PATTERN.get()));
         }
     }
 
@@ -94,6 +117,10 @@ final class VanillaTabPlacement {
         List<ItemLike> list = new ArrayList<>(List.of(family.base().get(), family.stairs().get(), family.slab().get(), family.wall().get()));
         if (chiseled != null) list.add(chiseled);
         return list;
+    }
+
+    private static boolean contains(BuildCreativeModeTabContentsEvent event, ItemLike item) {
+        return event.getParentEntries().contains(new ItemStack(item));
     }
 
     private static void after(BuildCreativeModeTabContentsEvent event, ItemLike anchor, List<? extends ItemLike> items) {

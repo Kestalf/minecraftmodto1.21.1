@@ -43,6 +43,78 @@ public class ModRecipeProvider extends RecipeProvider {
         coloredStairsAndSlabs(output);
         copper(output);
         plants(output);
+        items(output);
+    }
+
+    private void items(RecipeOutput output) {
+        // Copper tools and armor
+        Ingredient copper = Ingredient.of(Items.COPPER_INGOT);
+        var hasCopper = has(Items.COPPER_INGOT);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.COPPER_SWORD.get()).define('X', copper).define('#', Items.STICK)
+                .pattern("X").pattern("X").pattern("#").unlockedBy("has_copper_ingot", hasCopper).save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.COPPER_SHOVEL.get()).define('X', copper).define('#', Items.STICK)
+                .pattern("X").pattern("#").pattern("#").unlockedBy("has_copper_ingot", hasCopper).save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.COPPER_PICKAXE.get()).define('X', copper).define('#', Items.STICK)
+                .pattern("XXX").pattern(" # ").pattern(" # ").unlockedBy("has_copper_ingot", hasCopper).save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.COPPER_AXE.get()).define('X', copper).define('#', Items.STICK)
+                .pattern("XX").pattern("X#").pattern(" #").unlockedBy("has_copper_ingot", hasCopper).save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.COPPER_HOE.get()).define('X', copper).define('#', Items.STICK)
+                .pattern("XX").pattern(" #").pattern(" #").unlockedBy("has_copper_ingot", hasCopper).save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.COPPER_HELMET.get()).define('X', copper)
+                .pattern("XXX").pattern("X X").unlockedBy("has_copper_ingot", hasCopper).save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.COPPER_CHESTPLATE.get()).define('X', copper)
+                .pattern("X X").pattern("XXX").pattern("XXX").unlockedBy("has_copper_ingot", hasCopper).save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.COPPER_LEGGINGS.get()).define('X', copper)
+                .pattern("XXX").pattern("X X").pattern("X X").unlockedBy("has_copper_ingot", hasCopper).save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.COPPER_BOOTS.get()).define('X', copper)
+                .pattern("X X").pattern("X X").unlockedBy("has_copper_ingot", hasCopper).save(output);
+        List<ItemLike> copperGear = List.of(ModItems.COPPER_SWORD.get(), ModItems.COPPER_SHOVEL.get(), ModItems.COPPER_PICKAXE.get(),
+                ModItems.COPPER_AXE.get(), ModItems.COPPER_HOE.get(), ModItems.COPPER_HELMET.get(), ModItems.COPPER_CHESTPLATE.get(),
+                ModItems.COPPER_LEGGINGS.get(), ModItems.COPPER_BOOTS.get(), ModItems.COPPER_HORSE_ARMOR.get(), ModItems.COPPER_SPEAR.get());
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(copperGear.toArray(ItemLike[]::new)), RecipeCategory.MISC, ModItems.COPPER_NUGGET.get(),
+                0.1F, 200).unlockedBy("has_copper_gear", has(ModItems.COPPER_PICKAXE.get())).save(output, FutureBackport.id("copper_nugget_from_smelting"));
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(copperGear.toArray(ItemLike[]::new)), RecipeCategory.MISC, ModItems.COPPER_NUGGET.get(),
+                0.1F, 100).unlockedBy("has_copper_gear", has(ModItems.COPPER_PICKAXE.get())).save(output, FutureBackport.id("copper_nugget_from_blasting"));
+
+        // Spears: material in the top right corner, two sticks diagonally.
+        spear(output, ModItems.WOODEN_SPEAR.get(), Ingredient.of(ItemTags.PLANKS));
+        spear(output, ModItems.STONE_SPEAR.get(), Ingredient.of(ItemTags.STONE_TOOL_MATERIALS));
+        spear(output, ModItems.COPPER_SPEAR.get(), copper);
+        spear(output, ModItems.IRON_SPEAR.get(), Ingredient.of(Items.IRON_INGOT));
+        spear(output, ModItems.GOLDEN_SPEAR.get(), Ingredient.of(Items.GOLD_INGOT));
+        spear(output, ModItems.DIAMOND_SPEAR.get(), Ingredient.of(Items.DIAMOND));
+        netheriteSmithing(output, ModItems.DIAMOND_SPEAR.get(), RecipeCategory.COMBAT, ModItems.NETHERITE_SPEAR.get());
+        netheriteSmithing(output, Items.DIAMOND_HORSE_ARMOR, RecipeCategory.COMBAT, ModItems.NETHERITE_HORSE_ARMOR.get());
+
+        // Harnesses: leather, glass and wool; any harness can be re-dyed.
+        for (DyeColor color : DyeColor.values()) {
+            var harness = ModItems.HARNESSES.get(color).get();
+            ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, harness).define('L', Items.LEATHER).define('G', Items.GLASS)
+                    .define('#', ModBlocks.VanillaColored.wool(color)).pattern("LLL").pattern("G#G").group("harness")
+                    .unlockedBy("has_ghast_tear", has(Items.GHAST_TEAR)).save(output);
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, harness).requires(ModTags.Items.HARNESSES)
+                    .requires(net.minecraft.world.item.DyeItem.byColor(color)).group("harness_dye")
+                    .unlockedBy("has_harness", has(ModTags.Items.HARNESSES)).save(output, FutureBackport.id("dye_" + color.getName() + "_harness"));
+        }
+
+        // Bundles: the vanilla bundle becomes craftable (as in 1.21.2), dyeing keeps the contents.
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, Items.BUNDLE).define('-', Items.STRING).define('#', Items.LEATHER)
+                .pattern("-").pattern("#").unlockedBy("has_string", has(Items.STRING)).save(output, FutureBackport.id("bundle"));
+        net.minecraft.data.recipes.SpecialRecipeBuilder.special(io.github.kestalf.futurebackport.item.crafting.BundleDyeRecipe::new)
+                .save(output, FutureBackport.id("bundle_dye"));
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.DRIED_GHAST.get()).define('#', Items.GHAST_TEAR)
+                .define('X', Items.SOUL_SAND).pattern("###").pattern("#X#").pattern("###")
+                .unlockedBy("has_ghast_tear", has(Items.GHAST_TEAR)).save(output);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.FIELD_MASONED_BANNER_PATTERN.get()).requires(Items.PAPER)
+                .requires(Items.BRICKS).unlockedBy("has_bricks", has(Items.BRICKS)).save(output);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.BORDURE_INDENTED_BANNER_PATTERN.get()).requires(Items.PAPER)
+                .requires(Items.VINE).unlockedBy("has_vine", has(Items.VINE)).save(output);
+    }
+
+    private void spear(RecipeOutput output, ItemLike spear, Ingredient material) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, spear).define('X', material).define('#', Items.STICK)
+                .pattern("  X").pattern(" # ").pattern("#  ").unlockedBy("has_stick", has(Items.STICK)).save(output);
     }
 
     private void wood(RecipeOutput output, WoodFamily f, net.minecraft.tags.TagKey<net.minecraft.world.item.Item> logs) {
@@ -167,7 +239,6 @@ public class ModRecipeProvider extends RecipeProvider {
         dye(output, Items.PINK_DYE, ModBlocks.CACTUS_FLOWER.get(), 1);
         dye(output, Items.ORANGE_DYE, ModBlocks.OPEN_EYEBLOSSOM.get(), 1);
         dye(output, Items.GRAY_DYE, ModBlocks.CLOSED_EYEBLOSSOM.get(), 1);
-        dye(output, Items.RED_DYE, ModBlocks.RED_SHRUB.get(), 1);
     }
 
     private void dye(RecipeOutput output, ItemLike dye, ItemLike flower, int count) {

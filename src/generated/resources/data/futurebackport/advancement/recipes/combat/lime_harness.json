@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_red_shrub": {
+    "has_ghast_tear": {
       "conditions": {
         "items": [
           {
-            "items": "futurebackport:red_shrub"
+            "items": "minecraft:ghast_tear"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "futurebackport:red_dye_from_red_shrub"
+        "recipe": "futurebackport:lime_harness"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_red_shrub"
+      "has_ghast_tear"
     ]
   ],
   "rewards": {
     "recipes": [
-      "futurebackport:red_dye_from_red_shrub"
+      "futurebackport:lime_harness"
     ]
   }
 }

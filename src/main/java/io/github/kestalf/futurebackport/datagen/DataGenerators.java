@@ -21,7 +21,11 @@ import java.util.concurrent.CompletableFuture;
 @EventBusSubscriber(modid = FutureBackport.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public final class DataGenerators {
     private static final RegistrySetBuilder REGISTRIES = new RegistrySetBuilder()
-            .add(Registries.CONFIGURED_FEATURE, ModConfiguredFeatures::bootstrap);
+            .add(Registries.CONFIGURED_FEATURE, ModConfiguredFeatures::bootstrap)
+            .add(Registries.ENCHANTMENT, ModRegistryEntries::enchantments)
+            .add(Registries.DAMAGE_TYPE, ModRegistryEntries::damageTypes)
+            .add(Registries.JUKEBOX_SONG, ModRegistryEntries::jukeboxSongs)
+            .add(Registries.PAINTING_VARIANT, ModRegistryEntries::paintings);
 
     @SubscribeEvent
     static void gatherData(GatherDataEvent event) {
@@ -39,6 +43,9 @@ public final class DataGenerators {
         ModBlockTagsProvider blockTags = generator.addProvider(event.includeServer(), new ModBlockTagsProvider(output, lookup, files));
         generator.addProvider(event.includeServer(), new ModItemTagsProvider(output, lookup, blockTags.contentsGetter(), files));
         generator.addProvider(event.includeServer(), new ModDataMapProvider(output, lookup));
+        generator.addProvider(event.includeServer(), new ModMiscTagsProviders.Enchantments(output, lookup, files));
+        generator.addProvider(event.includeServer(), new ModMiscTagsProviders.Banners(output, lookup, files));
+        generator.addProvider(event.includeServer(), new ModMiscTagsProviders.Paintings(output, lookup, files));
         generator.addProvider(event.includeClient(), new ModBlockStateProvider(output, files));
     }
 

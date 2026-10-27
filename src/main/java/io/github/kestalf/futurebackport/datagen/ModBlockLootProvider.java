@@ -49,6 +49,7 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
             dropSelf(family.wall().get());
             add(family.slab().get(), this::createSlabItemTable);
         }
+        dropSelf(ModBlocks.DRIED_GHAST.get());
         for (var b : List.of(ModBlocks.CHISELED_RESIN_BRICKS, ModBlocks.CHISELED_CINNABAR, ModBlocks.CHISELED_SULFUR, ModBlocks.RESIN_BLOCK,
                 ModBlocks.PALE_MOSS_BLOCK)) {
             dropSelf(b.get());

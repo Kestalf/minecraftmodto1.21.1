@@ -51,7 +51,9 @@
   },
   "copy": {
     "textures/entity/equipment/horse_body/copper.png": "textures/entity/horse/armor/horse_armor_copper.png",
-    "textures/entity/equipment/horse_body/netherite.png": "textures/entity/horse/armor/horse_armor_netherite.png"
+    "textures/entity/equipment/horse_body/netherite.png": "textures/entity/horse/armor/horse_armor_netherite.png",
+    "textures/entity/equipment/humanoid/copper.png": "textures/models/armor/copper_layer_1.png",
+    "textures/entity/equipment/humanoid_leggings/copper.png": "textures/models/armor/copper_layer_2.png"
   },
   "layout_conversions": [
     {
