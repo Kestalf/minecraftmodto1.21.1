@@ -30,6 +30,8 @@ import io.github.kestalf.futurebackport.client.entity.CopperGolemModel;
 import io.github.kestalf.futurebackport.client.entity.CopperGolemRenderer;
 import io.github.kestalf.futurebackport.client.entity.CopperGolemStatueRenderer;
 import io.github.kestalf.futurebackport.client.entity.CreakingModel;
+import io.github.kestalf.futurebackport.client.entity.NautilusModel;
+import io.github.kestalf.futurebackport.client.entity.NautilusRenderer;
 import io.github.kestalf.futurebackport.client.entity.CreakingRenderer;
 import io.github.kestalf.futurebackport.client.entity.HappyGhastHarnessModel;
 import io.github.kestalf.futurebackport.client.entity.HappyGhastModel;
@@ -100,6 +102,11 @@ public final class ClientSetup {
         event.registerLayerDefinition(ModModelLayers.COPPER_GOLEM_SITTING, CopperGolemModel::createSittingLayer);
         event.registerLayerDefinition(ModModelLayers.COPPER_GOLEM_RUNNING, CopperGolemModel::createRunningLayer);
         event.registerLayerDefinition(ModModelLayers.COPPER_GOLEM_STAR, CopperGolemModel::createStarLayer);
+        event.registerLayerDefinition(ModModelLayers.NAUTILUS, NautilusModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.NAUTILUS_BABY, NautilusModel::createBabyLayer);
+        event.registerLayerDefinition(ModModelLayers.NAUTILUS_SADDLE, NautilusModel::createSaddleLayer);
+        event.registerLayerDefinition(ModModelLayers.NAUTILUS_ARMOR, NautilusModel::createArmorLayer);
+        event.registerLayerDefinition(ModModelLayers.ZOMBIE_NAUTILUS_CORAL, NautilusModel::createCoralLayer);
     }
 
     @SubscribeEvent
@@ -107,6 +114,8 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.HAPPY_GHAST.get(), HappyGhastRenderer::new);
         event.registerEntityRenderer(ModEntities.CREAKING.get(), CreakingRenderer::new);
         event.registerEntityRenderer(ModEntities.COPPER_GOLEM.get(), CopperGolemRenderer::new);
+        event.registerEntityRenderer(ModEntities.NAUTILUS.get(), NautilusRenderer::new);
+        event.registerEntityRenderer(ModEntities.ZOMBIE_NAUTILUS.get(), NautilusRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.COPPER_CHEST.get(), CopperChestRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.COPPER_GOLEM_STATUE.get(), CopperGolemStatueRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.SHELF.get(), io.github.kestalf.futurebackport.client.entity.ShelfRenderer::new);

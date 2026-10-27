@@ -31,6 +31,9 @@ public final class ModTags {
         public static final TagKey<Item> HAPPY_GHAST_TEMPT_ITEMS = tag("happy_ghast_tempt_items");
         public static final TagKey<Item> WOODEN_SHELVES = tag("wooden_shelves");
         public static final TagKey<Item> ENCHANTABLE_LUNGE = tag("enchantable/lunge");
+        public static final TagKey<Item> NAUTILUS_FOOD = tag("nautilus_food");
+        public static final TagKey<Item> NAUTILUS_BUCKET_FOOD = tag("nautilus_bucket_food");
+        public static final TagKey<Item> NAUTILUS_TAMING_ITEMS = tag("nautilus_taming_items");
 
         private static TagKey<Item> tag(String name) {
             return TagKey.create(Registries.ITEM, FutureBackport.id(name));

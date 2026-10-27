@@ -25,7 +25,8 @@ public final class DataGenerators {
             .add(Registries.ENCHANTMENT, ModRegistryEntries::enchantments)
             .add(Registries.DAMAGE_TYPE, ModRegistryEntries::damageTypes)
             .add(Registries.JUKEBOX_SONG, ModRegistryEntries::jukeboxSongs)
-            .add(Registries.PAINTING_VARIANT, ModRegistryEntries::paintings);
+            .add(Registries.PAINTING_VARIANT, ModRegistryEntries::paintings)
+            .add(net.neoforged.neoforge.registries.NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModRegistryEntries::biomeModifiers);
 
     @SubscribeEvent
     static void gatherData(GatherDataEvent event) {
@@ -46,6 +47,7 @@ public final class DataGenerators {
         generator.addProvider(event.includeServer(), new ModMiscTagsProviders.Enchantments(output, lookup, files));
         generator.addProvider(event.includeServer(), new ModMiscTagsProviders.Banners(output, lookup, files));
         generator.addProvider(event.includeServer(), new ModMiscTagsProviders.Paintings(output, lookup, files));
+        generator.addProvider(event.includeServer(), new ModMiscTagsProviders.Entities(output, lookup, files));
         generator.addProvider(event.includeClient(), new ModBlockStateProvider(output, files));
     }
 

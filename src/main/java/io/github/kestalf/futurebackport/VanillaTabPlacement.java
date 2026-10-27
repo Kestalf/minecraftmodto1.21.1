@@ -104,11 +104,15 @@ final class VanillaTabPlacement {
             after(event, Items.LEATHER_BOOTS, List.of(ModItems.COPPER_HELMET.get(), ModItems.COPPER_CHESTPLATE.get(),
                     ModItems.COPPER_LEGGINGS.get(), ModItems.COPPER_BOOTS.get()));
             after(event, Items.LEATHER_HORSE_ARMOR, List.of(ModItems.COPPER_HORSE_ARMOR.get()));
-            after(event, Items.DIAMOND_HORSE_ARMOR, List.of(ModItems.NETHERITE_HORSE_ARMOR.get()));
+            after(event, Items.DIAMOND_HORSE_ARMOR, List.of(ModItems.NETHERITE_HORSE_ARMOR.get(), ModItems.COPPER_NAUTILUS_ARMOR.get(),
+                    ModItems.IRON_NAUTILUS_ARMOR.get(), ModItems.GOLDEN_NAUTILUS_ARMOR.get(), ModItems.DIAMOND_NAUTILUS_ARMOR.get(),
+                    ModItems.NETHERITE_NAUTILUS_ARMOR.get()));
         } else if (tab == CreativeModeTabs.SPAWN_EGGS) {
             after(event, Items.COD_SPAWN_EGG, List.of(ModItems.COPPER_GOLEM_SPAWN_EGG.get()));
             after(event, Items.COW_SPAWN_EGG, List.of(ModItems.CREAKING_SPAWN_EGG.get()));
             after(event, Items.GUARDIAN_SPAWN_EGG, List.of(ModItems.HAPPY_GHAST_SPAWN_EGG.get()));
+            after(event, Items.MULE_SPAWN_EGG, List.of(ModItems.NAUTILUS_SPAWN_EGG.get()));
+            after(event, Items.ZOMBIE_HORSE_SPAWN_EGG, List.of(ModItems.ZOMBIE_NAUTILUS_SPAWN_EGG.get()));
         } else if (tab == CreativeModeTabs.INGREDIENTS) {
             after(event, Items.IRON_NUGGET, List.of(ModItems.COPPER_NUGGET.get()));
             after(event, Items.NETHER_BRICK, List.of(ModItems.RESIN_BRICK.get()));

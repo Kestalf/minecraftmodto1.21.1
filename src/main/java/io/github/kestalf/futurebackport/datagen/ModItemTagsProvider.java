@@ -10,6 +10,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Items;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -29,6 +30,9 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         copy(ModTags.Blocks.PALE_OAK_LOGS, ModTags.Items.PALE_OAK_LOGS);
         copy(ModTags.Blocks.POPLAR_LOGS, ModTags.Items.POPLAR_LOGS);
         copy(ModTags.Blocks.WOODEN_SHELVES, ModTags.Items.WOODEN_SHELVES);
+        tag(ModTags.Items.NAUTILUS_BUCKET_FOOD).add(Items.PUFFERFISH_BUCKET, Items.COD_BUCKET, Items.SALMON_BUCKET, Items.TROPICAL_FISH_BUCKET);
+        tag(ModTags.Items.NAUTILUS_FOOD).addTag(ItemTags.FISHES).addTag(ModTags.Items.NAUTILUS_BUCKET_FOOD);
+        tag(ModTags.Items.NAUTILUS_TAMING_ITEMS).add(Items.PUFFERFISH_BUCKET, Items.PUFFERFISH);
         copy(BlockTags.LOGS_THAT_BURN, ItemTags.LOGS_THAT_BURN);
         copy(BlockTags.PLANKS, ItemTags.PLANKS);
         copy(BlockTags.WOODEN_STAIRS, ItemTags.WOODEN_STAIRS);

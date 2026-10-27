@@ -1,6 +1,7 @@
 package io.github.kestalf.futurebackport.registry;
 
 import io.github.kestalf.futurebackport.FutureBackport;
+import io.github.kestalf.futurebackport.item.NautilusArmorItem;
 import io.github.kestalf.futurebackport.item.spear.SpearItem;
 import io.github.kestalf.futurebackport.item.spear.SpearMaterial;
 import net.minecraft.core.component.DataComponents;
@@ -120,6 +121,23 @@ public final class ModItems {
             () -> new DeferredSpawnEggItem(ModEntities.CREAKING, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
     public static final DeferredItem<DeferredSpawnEggItem> COPPER_GOLEM_SPAWN_EGG = ITEMS.register("copper_golem_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntities.COPPER_GOLEM, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
+    public static final DeferredItem<DeferredSpawnEggItem> NAUTILUS_SPAWN_EGG = ITEMS.register("nautilus_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.NAUTILUS, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
+    public static final DeferredItem<DeferredSpawnEggItem> ZOMBIE_NAUTILUS_SPAWN_EGG = ITEMS.register("zombie_nautilus_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.ZOMBIE_NAUTILUS, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
+
+    // ------------------------------------------------------------------ nautilus armor (1.21.11)
+
+    public static final DeferredItem<NautilusArmorItem> COPPER_NAUTILUS_ARMOR = ITEMS.register("copper_nautilus_armor",
+            () -> new NautilusArmorItem("copper", 4.0, 0.0, 0.0, new Item.Properties()));
+    public static final DeferredItem<NautilusArmorItem> IRON_NAUTILUS_ARMOR = ITEMS.register("iron_nautilus_armor",
+            () -> new NautilusArmorItem("iron", 5.0, 0.0, 0.0, new Item.Properties()));
+    public static final DeferredItem<NautilusArmorItem> GOLDEN_NAUTILUS_ARMOR = ITEMS.register("golden_nautilus_armor",
+            () -> new NautilusArmorItem("gold", 7.0, 0.0, 0.0, new Item.Properties()));
+    public static final DeferredItem<NautilusArmorItem> DIAMOND_NAUTILUS_ARMOR = ITEMS.register("diamond_nautilus_armor",
+            () -> new NautilusArmorItem("diamond", 11.0, 2.0, 0.0, new Item.Properties()));
+    public static final DeferredItem<NautilusArmorItem> NETHERITE_NAUTILUS_ARMOR = ITEMS.register("netherite_nautilus_armor",
+            () -> new NautilusArmorItem("netherite", 19.0, 3.0, 0.1, new Item.Properties().fireResistant()));
 
     // ------------------------------------------------------------------ helpers
 

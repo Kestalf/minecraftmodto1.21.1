@@ -113,6 +113,11 @@ public class ModRecipeProvider extends RecipeProvider {
         ModBlocks.SHELVES.forEach((wood, shelf) -> ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, shelf.get(), 6)
                 .define('#', strippedLogs.get(wood)).pattern("###").pattern("   ").pattern("###").group("shelf")
                 .unlockedBy(getHasName(strippedLogs.get(wood)), has(strippedLogs.get(wood))).save(output));
+        net.minecraft.data.recipes.SmithingTransformRecipeBuilder.smithing(Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
+                        Ingredient.of(ModItems.DIAMOND_NAUTILUS_ARMOR.get()), Ingredient.of(Items.NETHERITE_INGOT),
+                        RecipeCategory.COMBAT, ModItems.NETHERITE_NAUTILUS_ARMOR.get())
+                .unlocks("has_netherite_ingot", has(Items.NETHERITE_INGOT))
+                .save(output, FutureBackport.id("netherite_nautilus_armor_smithing"));
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.CREAKING_HEART.get()).define('L', ModBlocks.PALE_OAK.log.get())
                 .define('R', ModBlocks.RESIN_BLOCK.get()).pattern(" L ").pattern(" R ").pattern(" L ")
                 .unlockedBy("has_resin_block", has(ModBlocks.RESIN_BLOCK.get())).save(output);

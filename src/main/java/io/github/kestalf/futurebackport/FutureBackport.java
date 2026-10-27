@@ -7,6 +7,7 @@ import io.github.kestalf.futurebackport.registry.ModAttachments;
 import io.github.kestalf.futurebackport.registry.ModBlockEntities;
 import io.github.kestalf.futurebackport.registry.ModBlocks;
 import io.github.kestalf.futurebackport.registry.ModCreativeTabs;
+import io.github.kestalf.futurebackport.registry.ModEffects;
 import io.github.kestalf.futurebackport.registry.ModEntities;
 import io.github.kestalf.futurebackport.registry.ModItems;
 import io.github.kestalf.futurebackport.registry.ModParticles;
@@ -30,6 +31,7 @@ public final class FutureBackport {
         ModBlocks.BLOCKS.register(modBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modBus);
         ModEntities.ENTITIES.register(modBus);
+        ModEffects.EFFECTS.register(modBus);
         ModItems.ITEMS.register(modBus);
         ModArmorMaterials.MATERIALS.register(modBus);
         ModRecipes.SERIALIZERS.register(modBus);
@@ -43,6 +45,7 @@ public final class FutureBackport {
         modBus.addListener(CommonSetup::onBuildCreativeTabs);
         modBus.addListener(ModNetwork::register);
         modBus.addListener(ModEntities::registerAttributes);
+        modBus.addListener(ModEntities::registerSpawnPlacements);
     }
 
     public static ResourceLocation id(String path) {

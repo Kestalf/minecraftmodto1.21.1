@@ -7,6 +7,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.BannerPatternTagsProvider;
 import net.minecraft.data.tags.EnchantmentTagsProvider;
+import net.minecraft.data.tags.EntityTypeTagsProvider;
+import net.minecraft.tags.EntityTypeTags;
+import io.github.kestalf.futurebackport.registry.ModEntities;
 import net.minecraft.data.tags.PaintingVariantTagsProvider;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.PaintingVariantTags;
@@ -53,6 +56,23 @@ public final class ModMiscTagsProviders {
         @Override
         protected void addTags(HolderLookup.Provider provider) {
             tag(PaintingVariantTags.PLACEABLE).add(ModKeys.DENNIS);
+        }
+    }
+
+    public static class Entities extends EntityTypeTagsProvider {
+        public Entities(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup, ExistingFileHelper helper) {
+            super(output, lookup, FutureBackport.MOD_ID, helper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.Provider provider) {
+            var nautilus = ModEntities.NAUTILUS.get();
+            var zombieNautilus = ModEntities.ZOMBIE_NAUTILUS.get();
+            tag(EntityTypeTags.AQUATIC).add(nautilus, zombieNautilus);
+            tag(EntityTypeTags.CAN_BREATHE_UNDER_WATER).add(nautilus);
+            tag(EntityTypeTags.ZOMBIES).add(zombieNautilus);
+            tag(EntityTypeTags.NOT_SCARY_FOR_PUFFERFISH).add(nautilus, zombieNautilus);
+            tag(EntityTypeTags.FALL_DAMAGE_IMMUNE).add(ModEntities.COPPER_GOLEM.get());
         }
     }
 

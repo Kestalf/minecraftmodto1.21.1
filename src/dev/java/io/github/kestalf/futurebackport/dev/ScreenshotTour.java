@@ -91,6 +91,7 @@ public final class ScreenshotTour {
         if (scenario("creaking")) addCreakingScenario(server);
         if (scenario("golem")) addGolemScenario(server);
         if (scenario("shelf")) addShelfScenario(server);
+        if (scenario("nautilus")) addNautilusScenario(server);
         if (scenario("creative")) addCreativeScenario(server);
     }
 
@@ -564,6 +565,90 @@ public final class ScreenshotTour {
         STEPS.add(m -> run(server, String.format(java.util.Locale.ROOT, "tp %s %.1f %.1f %.1f 180 10", m.player.getGameProfile().getName(),
                 base.getX() - 5.5, base.getY() + 2.6, base.getZ() + 2.2)));
         STEPS.add(m -> shot(m, "shelf_closeup"));
+    }
+
+    /** Nautilus checks: a tamed, saddled and armored nautilus, a baby, a coral zombie nautilus, drowned jockeys, riding. */
+    private static void addNautilusScenario(MinecraftServer server) {
+        BlockPos base = ORIGIN.offset(-250, 0, 0);
+        int[] ids = new int[4];
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            String name = m.player.getGameProfile().getName();
+            exec(server, "gamemode spectator " + name);
+            for (int x = -9; x <= 9; x++) {
+                for (int z = -9; z <= 9; z++) {
+                    for (int y = 0; y <= 7; y++) {
+                        boolean wall = Math.abs(x) == 9 || Math.abs(z) == 9 || y == 0;
+                        level.setBlock(base.offset(x, y, z), wall ? Blocks.GLASS.defaultBlockState()
+                                : y == 7 ? Blocks.AIR.defaultBlockState() : Blocks.WATER.defaultBlockState(), 2);
+                    }
+                }
+            }
+            var player = server.getPlayerList().getPlayers().getFirst();
+            var adult = io.github.kestalf.futurebackport.registry.ModEntities.NAUTILUS.get().create(level);
+            adult.moveTo(base.getX() - 3, base.getY() + 3, base.getZ() + 2, 180, 0);
+            adult.tame(player);
+            adult.equipSaddle(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.SADDLE), null);
+            adult.setBodyArmorItem(new net.minecraft.world.item.ItemStack(io.github.kestalf.futurebackport.registry.ModItems.DIAMOND_NAUTILUS_ARMOR.get()));
+            adult.setNoAi(true);
+            level.addFreshEntity(adult);
+            var baby = io.github.kestalf.futurebackport.registry.ModEntities.NAUTILUS.get().create(level);
+            baby.moveTo(base.getX(), base.getY() + 3, base.getZ() + 2, 180, 0);
+            baby.setAge(-24000);
+            baby.setNoAi(true);
+            level.addFreshEntity(baby);
+            var zombie = io.github.kestalf.futurebackport.registry.ModEntities.ZOMBIE_NAUTILUS.get().create(level);
+            zombie.moveTo(base.getX() + 3, base.getY() + 3, base.getZ() + 2, 180, 0);
+            zombie.readAdditionalSaveData(new net.minecraft.nbt.CompoundTag() {{ putBoolean("coral", true); }});
+            zombie.setNoAi(true);
+            level.addFreshEntity(zombie);
+            ids[0] = adult.getId();
+            // Drowned with tridents: about half of them should come riding a zombie nautilus.
+            int jockeys = 0;
+            for (int i = 0; i < 20; i++) {
+                var drowned = net.minecraft.world.entity.EntityType.DROWNED.create(level);
+                drowned.moveTo(base.getX() + 6, base.getY() + 2, base.getZ() - 6, 0, 0);
+                drowned.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.TRIDENT));
+                drowned.finalizeSpawn(level, level.getCurrentDifficultyAt(drowned.blockPosition()), net.minecraft.world.entity.MobSpawnType.NATURAL, null);
+                if (drowned.getVehicle() instanceof io.github.kestalf.futurebackport.entity.nautilus.ZombieNautilus mount) {
+                    jockeys++;
+                    if (jockeys == 1 && drowned.getMainHandItem().is(net.minecraft.world.item.Items.TRIDENT)) {
+                        level.addFreshEntity(drowned);
+                        drowned.setNoAi(true);
+                        mount.setNoAi(true);
+                        continue;
+                    }
+                    mount.discard();
+                }
+                drowned.discard();
+            }
+            FutureBackport.LOGGER.info("[tour] nautilus: drowned jockeys {}/20", jockeys);
+            exec(server, String.format(java.util.Locale.ROOT, "tp %s %d %d %d 0 20", name, base.getX(), base.getY() + 5, base.getZ() - 12));
+        }));
+        STEPS.add(m -> m.options.hideGui = true);
+        STEPS.add(m -> shot(m, "nautiluses"));
+        STEPS.add(m -> pending = server.submit(() -> {
+            var player = server.getPlayerList().getPlayers().getFirst();
+            var adult = (io.github.kestalf.futurebackport.entity.nautilus.AbstractNautilus) server.overworld().getEntity(ids[0]);
+            exec(server, "gamemode creative " + player.getGameProfile().getName());
+            player.teleportTo(adult.getX(), adult.getY() + 1, adult.getZ());
+            FutureBackport.LOGGER.info("[tour] mounting: {}", player.startRiding(adult, true));
+        }));
+        STEPS.add(m -> pending = server.submit(() -> {
+            var player = server.getPlayerList().getPlayers().getFirst();
+            var adult = (io.github.kestalf.futurebackport.entity.nautilus.AbstractNautilus) server.overworld().getEntity(ids[0]);
+            FutureBackport.LOGGER.info("[tour] riding nautilus: vehicle={} breath effect={} armor={} canJump={}", player.getVehicle(),
+                    player.hasEffect(io.github.kestalf.futurebackport.registry.ModEffects.BREATH_OF_THE_NAUTILUS), adult.getArmorValue(), adult.canJump());
+        }));
+        STEPS.add(m -> {
+            m.options.hideGui = false;
+            m.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK);
+        });
+        STEPS.add(m -> shot(m, "nautilus_ridden"));
+        STEPS.add(m -> {
+            m.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
+            pending = server.submit(() -> server.getPlayerList().getPlayers().getFirst().stopRiding());
+        });
     }
 
     private static void logGolem(MinecraftServer server, java.util.UUID golemId, BlockPos base) {

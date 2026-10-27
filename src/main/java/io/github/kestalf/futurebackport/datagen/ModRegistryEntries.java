@@ -1,6 +1,7 @@
 package io.github.kestalf.futurebackport.datagen;
 
 import io.github.kestalf.futurebackport.FutureBackport;
+import io.github.kestalf.futurebackport.registry.ModEntities;
 import io.github.kestalf.futurebackport.registry.ModKeys;
 import io.github.kestalf.futurebackport.registry.ModSounds;
 import io.github.kestalf.futurebackport.registry.ModTags;
@@ -43,6 +44,15 @@ public final class ModRegistryEntries {
 
     public static void paintings(BootstrapContext<PaintingVariant> context) {
         context.register(ModKeys.DENNIS, new PaintingVariant(3, 3, ModKeys.DENNIS.location()));
+    }
+
+    /** Natural spawns of the new mobs. */
+    public static void biomeModifiers(BootstrapContext<net.neoforged.neoforge.common.world.BiomeModifier> context) {
+        var biomes = context.lookup(Registries.BIOME);
+        context.register(net.minecraft.resources.ResourceKey.create(net.neoforged.neoforge.registries.NeoForgeRegistries.Keys.BIOME_MODIFIERS,
+                FutureBackport.id("spawn_nautilus")), net.neoforged.neoforge.common.world.BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(
+                biomes.getOrThrow(net.minecraft.tags.BiomeTags.IS_OCEAN),
+                new net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData(ModEntities.NAUTILUS.get(), 2, 1, 3)));
     }
 
     private ModRegistryEntries() {
