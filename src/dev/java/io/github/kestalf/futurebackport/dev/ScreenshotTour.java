@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
@@ -95,6 +96,7 @@ public final class ScreenshotTour {
         if (scenario("desert")) addDesertScenario(server);
         if (scenario("farm")) addFarmScenario(server);
         if (scenario("sulfur")) addSulfurScenario(server);
+        if (scenario("cube")) addCubeScenario(server);
         if (scenario("creative")) addCreativeScenario(server);
     }
 
@@ -909,6 +911,150 @@ public final class ScreenshotTour {
             run(server, "gamemode creative " + m.player.getGameProfile().getName());
         });
         STEPS.add(m -> shot(m, "sulfur_items"));
+    }
+
+    private static void addCubeScenario(MinecraftServer server) {
+        BlockPos base = ORIGIN.offset(-430, 0, 0);
+        java.util.List<java.util.UUID> ids = new java.util.ArrayList<>();
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            String name = m.player.getGameProfile().getName();
+            exec(server, "gamemode spectator " + name);
+            exec(server, "kill @e[type=item]");
+            exec(server, "kill @e[type=futurebackport:sulfur_cube]");
+            for (int x = -14; x <= 14; x++) {
+                for (int z = -8; z <= 14; z++) {
+                    level.setBlock(base.offset(x, 0, z), Blocks.SMOOTH_STONE.defaultBlockState(), 2);
+                    for (int y = 1; y < 10; y++) level.setBlock(base.offset(x, y, z), Blocks.AIR.defaultBlockState(), 2);
+                }
+            }
+            var type = io.github.kestalf.futurebackport.registry.ModEntities.SULFUR_CUBE.get();
+            net.minecraft.world.item.Item[] blocks = {null, Items.DIRT, Items.OAK_PLANKS, Items.WHITE_WOOL, Items.MAGMA_BLOCK,
+                    Items.SHROOMLIGHT, Items.TNT, Items.IRON_BLOCK};
+            for (int i = 0; i < blocks.length; i++) {
+                var cube = type.create(level);
+                cube.moveTo(base.getX() - 10.5 + i * 3, base.getY() + 1, base.getZ() + 0.5, 180, 0);
+                cube.finalizeSpawn(level, level.getCurrentDifficultyAt(cube.blockPosition()), net.minecraft.world.entity.MobSpawnType.COMMAND, null);
+                if (blocks[i] != null) cube.absorb(new net.minecraft.world.item.ItemStack(blocks[i]));
+                cube.setPersistenceRequired();
+                level.addFreshEntity(cube);
+                ids.add(cube.getUUID());
+            }
+            var small = type.create(level);
+            small.moveTo(base.getX() + 13.5, base.getY() + 1, base.getZ() + 0.5, 180, 0);
+            small.setSize(io.github.kestalf.futurebackport.entity.sulfur.SulfurCube.SMALL);
+            small.setPersistenceRequired();
+            level.addFreshEntity(small);
+            ids.add(small.getUUID());
+            FutureBackport.LOGGER.info("[tour] cubes: {}", ids.stream().map(id -> {
+                var c = (io.github.kestalf.futurebackport.entity.sulfur.SulfurCube) level.getEntity(id);
+                return c.getSize() + ":" + c.getArchetype() + ":" + c.getBbWidth();
+            }).toList());
+            exec(server, String.format(java.util.Locale.ROOT, "tp %s %d %d %d 0 25", name, base.getX(), base.getY() + 4, base.getZ() - 9));
+        }));
+        STEPS.add(m -> m.options.hideGui = true);
+        STEPS.add(m -> shot(m, "cubes"));
+        // Hit them all the same way from the north and see how far each one goes.
+        double[] startZ = new double[16];
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            var player = server.getPlayerList().getPlayers().getFirst();
+            exec(server, "gamemode survival " + player.getGameProfile().getName());
+            for (int i = 0; i < ids.size(); i++) {
+                var cube = (io.github.kestalf.futurebackport.entity.sulfur.SulfurCube) level.getEntity(ids.get(i));
+                if (cube == null) continue;
+                startZ[i] = cube.getZ();
+                player.teleportTo(level, cube.getX(), cube.getY(), cube.getZ() - 1.5, 0, 10);
+                player.resetAttackStrengthTicker();
+                float health = cube.getHealth();
+                player.attack(cube);
+                FutureBackport.LOGGER.info("[tour] hit {}: health {} -> {} velocity {}", cube.getArchetype(), health, cube.getHealth(),
+                        cube.getDeltaMovement());
+            }
+            player.teleportTo(level, base.getX(), base.getY() + 4, base.getZ() - 9, 0, 25);
+            exec(server, "gamemode spectator " + player.getGameProfile().getName());
+        }));
+        STEPS.add(m -> {
+            nextWait = 100;
+            pending = server.submit(() -> {
+                ServerLevel level = server.overworld();
+                for (int i = 0; i < ids.size(); i++) {
+                    var cube = (io.github.kestalf.futurebackport.entity.sulfur.SulfurCube) level.getEntity(ids.get(i));
+                    FutureBackport.LOGGER.info("[tour] after hit {}: moved {} blocks, y={} fuse={}", cube == null ? "gone" : cube.getArchetype(),
+                            cube == null ? "-" : String.format(java.util.Locale.ROOT, "%.2f", cube.getZ() - startZ[i]),
+                            cube == null ? "-" : String.format(java.util.Locale.ROOT, "%.2f", cube.getY() - base.getY()),
+                            cube == null ? "-" : cube.getFuse());
+                }
+            });
+        });
+        STEPS.add(m -> shot(m, "cubes_hit"));
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            var player = server.getPlayerList().getPlayers().getFirst();
+            exec(server, "gamemode survival " + player.getGameProfile().getName());
+            // Light the TNT cube, bucket the dirt cube, shear the planks one, kill the plain one.
+            var tnt = (io.github.kestalf.futurebackport.entity.sulfur.SulfurCube) level.getEntity(ids.get(6));
+            var dirt = (io.github.kestalf.futurebackport.entity.sulfur.SulfurCube) level.getEntity(ids.get(1));
+            var planks = (io.github.kestalf.futurebackport.entity.sulfur.SulfurCube) level.getEntity(ids.get(2));
+            var plain = (io.github.kestalf.futurebackport.entity.sulfur.SulfurCube) level.getEntity(ids.get(0));
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new net.minecraft.world.item.ItemStack(Items.FLINT_AND_STEEL));
+            if (tnt != null) {
+                tnt.moveTo(base.getX() + 10.5, base.getY() + 1, base.getZ() + 10.5);
+                FutureBackport.LOGGER.info("[tour] light tnt cube: {} fuse={}", player.interactOn(tnt, net.minecraft.world.InteractionHand.MAIN_HAND), tnt.getFuse());
+            }
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new net.minecraft.world.item.ItemStack(Items.BUCKET));
+            if (dirt != null) {
+                var result = player.interactOn(dirt, net.minecraft.world.InteractionHand.MAIN_HAND);
+                var bucket = player.getMainHandItem();
+                FutureBackport.LOGGER.info("[tour] bucket dirt cube: {} -> {} removed={} tooltip={}", result, bucket, dirt.isRemoved(),
+                        bucket.getTooltipLines(net.minecraft.world.item.Item.TooltipContext.of(level), player,
+                                net.minecraft.world.item.TooltipFlag.NORMAL).stream().map(c -> c.getString()).toList());
+                BlockPos at = base.offset(-12, 0, 6);
+                var use = bucket.useOn(new net.minecraft.world.item.context.UseOnContext(player, net.minecraft.world.InteractionHand.MAIN_HAND,
+                        new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(at).add(0, 0.5, 0),
+                                net.minecraft.core.Direction.UP, at, false)));
+                var placed = level.getEntitiesOfClass(io.github.kestalf.futurebackport.entity.sulfur.SulfurCube.class,
+                        new net.minecraft.world.phys.AABB(at).inflate(2));
+                FutureBackport.LOGGER.info("[tour] bucket placed: {} hand={} cubes={}", use, player.getMainHandItem(),
+                        placed.stream().map(c -> c.getArchetype() + " fromBucket=" + c.isFromBucket()).toList());
+            }
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new net.minecraft.world.item.ItemStack(Items.SHEARS));
+            if (planks != null) {
+                var result = player.interactOn(planks, net.minecraft.world.InteractionHand.MAIN_HAND);
+                FutureBackport.LOGGER.info("[tour] shear planks cube: {} block now {}", result, planks.getBlock());
+            }
+            if (plain != null) {
+                plain.hurt(level.damageSources().playerAttack(player), 100.0F);
+                var cubes = level.getEntitiesOfClass(io.github.kestalf.futurebackport.entity.sulfur.SulfurCube.class,
+                        new net.minecraft.world.phys.AABB(plain.blockPosition()).inflate(3));
+                FutureBackport.LOGGER.info("[tour] killed plain cube: nearby {}", cubes.stream().map(c -> c.getSize() + (c.isAlive() ? "" : "(dead)")).toList());
+            }
+            // A dropped block gets absorbed by a free large cube.
+            spawnCubeNextToBlock(level, base);
+            exec(server, "gamemode spectator " + player.getGameProfile().getName());
+        }));
+        STEPS.add(m -> {
+            nextWait = 140;
+        });
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            var cubes = level.getEntitiesOfClass(io.github.kestalf.futurebackport.entity.sulfur.SulfurCube.class, new net.minecraft.world.phys.AABB(base).inflate(20));
+            FutureBackport.LOGGER.info("[tour] cubes at the end: {} | tnt exploded={}", cubes.stream().map(c -> c.getSize() + ":" + c.getArchetype()).toList(),
+                    level.getEntity(ids.get(6)) == null);
+        }));
+        STEPS.add(m -> shot(m, "cubes_end"));
+    }
+
+    /** A large cube next to a dropped stone block, to check that it absorbs it. */
+    private static io.github.kestalf.futurebackport.entity.sulfur.SulfurCube spawnCubeNextToBlock(ServerLevel level, BlockPos base) {
+        var cube = io.github.kestalf.futurebackport.registry.ModEntities.SULFUR_CUBE.get().create(level);
+        cube.moveTo(base.getX() + 0.5, base.getY() + 1, base.getZ() + 10.5, 0, 0);
+        cube.setPersistenceRequired();
+        level.addFreshEntity(cube);
+        var item = new net.minecraft.world.entity.item.ItemEntity(level, base.getX() + 0.5, base.getY() + 1, base.getZ() + 11.0,
+                new net.minecraft.world.item.ItemStack(Items.STONE));
+        level.addFreshEntity(item);
+        return cube;
     }
 
     private static void logGolem(MinecraftServer server, java.util.UUID golemId, BlockPos base) {
