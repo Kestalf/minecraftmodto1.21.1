@@ -1,0 +1,24 @@
+{
+  "type": "futurebackport:add_item",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:entities/husk"
+    },
+    {
+      "condition": "minecraft:entity_properties",
+      "entity": "this",
+      "predicate": {
+        "vehicle": {
+          "type": "futurebackport:camel_husk"
+        }
+      }
+    }
+  ],
+  "count": {
+    "type": "minecraft:uniform",
+    "max_inclusive": 1,
+    "min_inclusive": 0
+  },
+  "item": "minecraft:rabbit_foot"
+}

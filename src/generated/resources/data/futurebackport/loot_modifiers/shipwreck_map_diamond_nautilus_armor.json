@@ -1,0 +1,15 @@
+{
+  "type": "futurebackport:add_item",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:chests/shipwreck_map"
+    },
+    {
+      "chance": 0.010810811,
+      "condition": "minecraft:random_chance"
+    }
+  ],
+  "count": 1,
+  "item": "futurebackport:diamond_nautilus_armor"
+}

@@ -50,6 +50,7 @@ public final class DataGenerators {
         generator.addProvider(event.includeServer(), new ModMiscTagsProviders.Entities(output, lookup, files));
         generator.addProvider(event.includeServer(), new ModMiscTagsProviders.Biomes(output, lookup, files));
         generator.addProvider(event.includeServer(), new ModMiscTagsProviders.DamageTypes(output, lookup, files));
+        generator.addProvider(event.includeServer(), new ModLootModifierProvider(output, lookup));
         generator.addProvider(event.includeClient(), new ModBlockStateProvider(output, files));
     }
 

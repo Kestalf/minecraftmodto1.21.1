@@ -1,0 +1,15 @@
+{
+  "type": "futurebackport:add_item",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:chests/abandoned_mineshaft"
+    },
+    {
+      "chance": 0.4212963,
+      "condition": "minecraft:random_chance"
+    }
+  ],
+  "count": 1,
+  "item": "futurebackport:music_disc_bounce"
+}

@@ -140,6 +140,7 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.CAMEL_HUSK.get(), DesertMobRenderers.CamelHuskRenderer::new);
         event.registerEntityRenderer(ModEntities.PARCHED.get(), DesertMobRenderers.ParchedRenderer::new);
         event.registerEntityRenderer(ModEntities.SULFUR_CUBE.get(), SulfurCubeRenderer::new);
+        event.registerEntityRenderer(ModEntities.MANNEQUIN.get(), io.github.kestalf.futurebackport.client.entity.MannequinRenderer::new);
         event.registerEntityRenderer(ModEntities.CUSHION.get(), io.github.kestalf.futurebackport.client.entity.CushionRenderer::new);
         event.registerEntityRenderer(net.minecraft.world.entity.EntityType.CHICKEN, FarmVariantRenderers.Chickens::new);
         event.registerEntityRenderer(net.minecraft.world.entity.EntityType.COW, FarmVariantRenderers.Cows::new);

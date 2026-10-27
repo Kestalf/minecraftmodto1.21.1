@@ -1,0 +1,15 @@
+{
+  "type": "futurebackport:add_item",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:chests/shipwreck_supply"
+    },
+    {
+      "chance": 0.054054055,
+      "condition": "minecraft:random_chance"
+    }
+  ],
+  "count": 1,
+  "item": "futurebackport:iron_nautilus_armor"
+}

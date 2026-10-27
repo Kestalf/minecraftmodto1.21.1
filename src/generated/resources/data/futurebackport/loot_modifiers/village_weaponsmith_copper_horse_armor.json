@@ -1,0 +1,15 @@
+{
+  "type": "futurebackport:add_item",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:chests/village/village_weaponsmith"
+    },
+    {
+      "chance": 0.050210595,
+      "condition": "minecraft:random_chance"
+    }
+  ],
+  "count": 1,
+  "item": "futurebackport:copper_horse_armor"
+}

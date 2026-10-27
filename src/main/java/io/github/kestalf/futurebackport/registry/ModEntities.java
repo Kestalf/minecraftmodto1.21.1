@@ -55,6 +55,10 @@ public final class ModEntities {
             () -> EntityType.Builder.of(SulfurCube::new, MobCategory.CREATURE).sized(0.49F, 0.49F).eyeHeight(0.3125F)
                     .clientTrackingRange(10).build("sulfur_cube"));
 
+    public static final DeferredHolder<EntityType<?>, EntityType<io.github.kestalf.futurebackport.entity.Mannequin>> MANNEQUIN =
+            ENTITIES.register("mannequin", () -> EntityType.Builder.of(io.github.kestalf.futurebackport.entity.Mannequin::new, MobCategory.MISC)
+                    .sized(0.6F, 1.8F).eyeHeight(1.62F).clientTrackingRange(10).build("mannequin"));
+
     public static final DeferredHolder<EntityType<?>, EntityType<Cushion>> CUSHION = ENTITIES.register("cushion",
             () -> EntityType.Builder.<Cushion>of(Cushion::new, MobCategory.MISC).sized(0.999F, 0.249F).noSummon()
                     .clientTrackingRange(10).updateInterval(Integer.MAX_VALUE).build("cushion"));
@@ -72,6 +76,7 @@ public final class ModEntities {
         event.put(CAMEL_HUSK.get(), Camel.createAttributes().build());
         event.put(PARCHED.get(), Parched.createAttributes().build());
         event.put(SULFUR_CUBE.get(), SulfurCube.createAttributes().build());
+        event.put(MANNEQUIN.get(), net.minecraft.world.entity.LivingEntity.createLivingAttributes().build());
     }
 
     public static void registerSpawnPlacements(RegisterSpawnPlacementsEvent event) {

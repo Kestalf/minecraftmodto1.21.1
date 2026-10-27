@@ -1,0 +1,19 @@
+{
+  "type": "futurebackport:add_item",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:chests/desert_pyramid"
+    },
+    {
+      "chance": 0.22193076,
+      "condition": "minecraft:random_chance"
+    }
+  ],
+  "count": {
+    "type": "minecraft:uniform",
+    "max_inclusive": 5,
+    "min_inclusive": 1
+  },
+  "item": "minecraft:leather"
+}

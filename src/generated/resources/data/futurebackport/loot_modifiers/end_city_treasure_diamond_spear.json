@@ -1,0 +1,20 @@
+{
+  "type": "futurebackport:add_item",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:chests/end_city_treasure"
+    },
+    {
+      "chance": 0.12714066,
+      "condition": "minecraft:random_chance"
+    }
+  ],
+  "count": 1,
+  "enchant_levels": {
+    "type": "minecraft:uniform",
+    "max_inclusive": 39,
+    "min_inclusive": 20
+  },
+  "item": "futurebackport:diamond_spear"
+}

@@ -1,0 +1,17 @@
+{
+  "type": "futurebackport:add_item",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:chests/bastion_treasure"
+    },
+    {
+      "chance": 0.28821975,
+      "condition": "minecraft:random_chance"
+    }
+  ],
+  "count": 1,
+  "enchant_randomly": true,
+  "item": "futurebackport:diamond_spear",
+  "min_durability": 0.8
+}

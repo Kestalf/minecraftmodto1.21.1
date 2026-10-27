@@ -97,6 +97,8 @@ public final class ScreenshotTour {
         if (scenario("farm")) addFarmScenario(server);
         if (scenario("sulfur")) addSulfurScenario(server);
         if (scenario("cube")) addCubeScenario(server);
+        if (scenario("mannequin")) addMannequinScenario(server);
+        if (scenario("loot")) addLootScenario(server);
         if (scenario("creative")) addCreativeScenario(server);
     }
 
@@ -1044,6 +1046,89 @@ public final class ScreenshotTour {
                     level.getEntity(ids.get(6)) == null);
         }));
         STEPS.add(m -> shot(m, "cubes_end"));
+    }
+
+    private static void addMannequinScenario(MinecraftServer server) {
+        BlockPos base = ORIGIN.offset(-480, 0, 0);
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            String name = m.player.getGameProfile().getName();
+            exec(server, "gamemode spectator " + name);
+            exec(server, "kill @e[type=futurebackport:mannequin]");
+            for (int x = -8; x <= 8; x++) {
+                for (int z = -4; z <= 6; z++) {
+                    level.setBlock(base.offset(x, 0, z), Blocks.POLISHED_ANDESITE.defaultBlockState(), 2);
+                    for (int y = 1; y < 6; y++) level.setBlock(base.offset(x, y, z), Blocks.AIR.defaultBlockState(), 2);
+                }
+            }
+            String[] nbt = {
+                    "{}",
+                    "{CustomName:'\"Guard\"',CustomNameVisible:1b,ArmorItems:[{id:\"minecraft:iron_boots\",count:1},{id:\"minecraft:iron_leggings\",count:1},"
+                            + "{id:\"minecraft:iron_chestplate\",count:1},{id:\"minecraft:iron_helmet\",count:1}],"
+                            + "HandItems:[{id:\"minecraft:iron_sword\",count:1},{id:\"minecraft:shield\",count:1}]}",
+                    "{pose:\"crouching\",main_hand:\"left\",HandItems:[{id:\"futurebackport:copper_spear\",count:1},{}],CustomName:'\"Lefty\"',"
+                            + "CustomNameVisible:1b,description:'\"Shopkeeper\"'}",
+                    "{pose:\"sleeping\",hidden_layers:[\"hat\",\"jacket\"]}",
+                    "{pose:\"swimming\",immovable:1b}",
+                    "{profile:{name:\"Steve\",id:[I;0,0,0,1]},CustomName:'\"Steve\"',CustomNameVisible:1b,hide_description:1b}"};
+            for (int i = 0; i < nbt.length; i++) {
+                exec(server, String.format(java.util.Locale.ROOT, "summon futurebackport:mannequin %d %d %d %s", base.getX() - 6 + i * 2 + 0, base.getY() + 1,
+                        base.getZ() + 2, nbt[i]));
+            }
+            var all = level.getEntitiesOfClass(io.github.kestalf.futurebackport.entity.Mannequin.class, new net.minecraft.world.phys.AABB(base).inflate(10));
+            FutureBackport.LOGGER.info("[tour] mannequins: {}", all.stream().map(e -> e.getName().getString() + " pose=" + e.getPose()
+                    + " size=" + e.getBbHeight() + " arm=" + e.getMainArm() + " hand=" + e.getMainHandItem() + " desc="
+                    + (e.getDescriptionLine() == null ? "-" : e.getDescriptionLine().getString())).toList());
+            exec(server, String.format(java.util.Locale.ROOT, "tp %s %d %d %d 180 15", name, base.getX(), base.getY() + 3, base.getZ() + 8));
+        }));
+        STEPS.add(m -> m.options.hideGui = true);
+        STEPS.add(m -> shot(m, "mannequins"));
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            var player = server.getPlayerList().getPlayers().getFirst();
+            var guard = level.getEntitiesOfClass(io.github.kestalf.futurebackport.entity.Mannequin.class, new net.minecraft.world.phys.AABB(base).inflate(10),
+                    e -> e.getName().getString().equals("Guard")).getFirst();
+            float health = guard.getHealth();
+            guard.hurt(level.damageSources().playerAttack(player), 5.0F);
+            FutureBackport.LOGGER.info("[tour] mannequin hurt: {} -> {}", health, guard.getHealth());
+        }));
+    }
+
+    private static void addLootScenario(MinecraftServer server) {
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            java.util.function.BiFunction<String, Integer, java.util.Map<String, Integer>> roll = (table, times) -> {
+                var key = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.LOOT_TABLE,
+                        net.minecraft.resources.ResourceLocation.withDefaultNamespace(table));
+                var loot = server.reloadableRegistries().getLootTable(key);
+                java.util.Map<String, Integer> counts = new java.util.TreeMap<>();
+                for (int i = 0; i < times; i++) {
+                    var params = new net.minecraft.world.level.storage.loot.LootParams.Builder(level)
+                            .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN, net.minecraft.world.phys.Vec3.ZERO);
+                    net.minecraft.world.level.storage.loot.LootParams built;
+                    if (table.startsWith("gameplay/piglin")) {
+                        built = params.withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.THIS_ENTITY,
+                                net.minecraft.world.entity.EntityType.PIGLIN.create(level)).create(net.minecraft.world.level.storage.loot.parameters.LootContextParamSets.PIGLIN_BARTER);
+                    } else {
+                        built = params.create(net.minecraft.world.level.storage.loot.parameters.LootContextParamSets.CHEST);
+                    }
+                    for (var stack : loot.getRandomItems(built)) {
+                        var id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem());
+                        if (id.getNamespace().equals(FutureBackport.MOD_ID) || stack.is(Items.LEATHER) || stack.is(Items.LODESTONE)) {
+                            String label = id.getPath() + (stack.isEnchanted() ? "*" : "") + (stack.isDamaged() ? "~" : "");
+                            counts.merge(label, 1, Integer::sum);
+                        }
+                    }
+                }
+                return counts;
+            };
+            for (String table : List.of("chests/buried_treasure", "chests/shipwreck_treasure", "chests/village/village_weaponsmith",
+                    "chests/abandoned_mineshaft", "chests/bastion_treasure", "chests/end_city_treasure", "chests/woodland_mansion",
+                    "chests/simple_dungeon", "chests/ruined_portal")) {
+                FutureBackport.LOGGER.info("[tour] loot {} x200: {}", table, roll.apply(table, 200));
+            }
+            FutureBackport.LOGGER.info("[tour] loot piglin_bartering x1000: {}", roll.apply("gameplay/piglin_bartering", 1000));
+        }));
     }
 
     /** A large cube next to a dropped stone block, to check that it absorbs it. */

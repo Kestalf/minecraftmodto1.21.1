@@ -36,6 +36,7 @@ public final class FutureBackport {
         ModItems.ITEMS.register(modBus);
         ModArmorMaterials.MATERIALS.register(modBus);
         ModRecipes.SERIALIZERS.register(modBus);
+        io.github.kestalf.futurebackport.registry.ModLootModifiers.SERIALIZERS.register(modBus);
         ModParticles.PARTICLES.register(modBus);
         ModAttachments.ATTACHMENT_TYPES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);
