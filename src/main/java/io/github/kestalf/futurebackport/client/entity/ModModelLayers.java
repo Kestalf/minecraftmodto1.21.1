@@ -18,6 +18,10 @@ public final class ModModelLayers {
     public static final ModelLayerLocation NAUTILUS_ARMOR = layer("nautilus", "armor");
     public static final ModelLayerLocation ZOMBIE_NAUTILUS_CORAL = layer("zombie_nautilus", "coral");
     public static final ModelLayerLocation PARCHED = layer("parched");
+    public static final ModelLayerLocation SULFUR_CUBE = layer("sulfur_cube");
+    public static final ModelLayerLocation SULFUR_CUBE_OUTER = layer("sulfur_cube", "outer");
+    public static final ModelLayerLocation SULFUR_CUBE_SMALL = layer("sulfur_cube_small");
+    public static final ModelLayerLocation SULFUR_CUBE_SMALL_OUTER = layer("sulfur_cube_small", "outer");
     public static final ModelLayerLocation CUSHION = layer("cushion");
     public static final ModelLayerLocation COLD_CHICKEN = layer("cold_chicken");
     public static final ModelLayerLocation VARIANT_COW = layer("variant_cow");

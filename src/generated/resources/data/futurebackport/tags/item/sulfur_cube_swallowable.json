@@ -1,0 +1,16 @@
+{
+  "values": [
+    "#futurebackport:sulfur_cube_archetype/bouncy",
+    "#futurebackport:sulfur_cube_archetype/explosive",
+    "#futurebackport:sulfur_cube_archetype/fast_flat",
+    "#futurebackport:sulfur_cube_archetype/fast_sliding",
+    "#futurebackport:sulfur_cube_archetype/high_resistance",
+    "#futurebackport:sulfur_cube_archetype/hot",
+    "#futurebackport:sulfur_cube_archetype/light",
+    "#futurebackport:sulfur_cube_archetype/regular",
+    "#futurebackport:sulfur_cube_archetype/slow_bouncy",
+    "#futurebackport:sulfur_cube_archetype/slow_flat",
+    "#futurebackport:sulfur_cube_archetype/slow_sliding",
+    "#futurebackport:sulfur_cube_archetype/sticky"
+  ]
+}

@@ -101,6 +101,7 @@ final class VanillaTabPlacement {
             List<ItemLike> harnesses = new ArrayList<>();
             ModItems.HARNESSES.values().forEach(h -> harnesses.add(h.get()));
             after(event, Items.SADDLE, harnesses);
+            after(event, Items.TADPOLE_BUCKET, List.of(ModItems.SULFUR_CUBE_BUCKET.get()));
         } else if (tab == CreativeModeTabs.COMBAT) {
             after(event, Items.STONE_SWORD, List.of(ModItems.COPPER_SWORD.get()));
             after(event, Items.STONE_AXE, List.of(ModItems.COPPER_AXE.get()));
@@ -121,6 +122,7 @@ final class VanillaTabPlacement {
             after(event, Items.CAMEL_SPAWN_EGG, List.of(ModItems.CAMEL_HUSK_SPAWN_EGG.get()));
             after(event, Items.PANDA_SPAWN_EGG, List.of(ModItems.PARCHED_SPAWN_EGG.get()));
             after(event, Items.ZOMBIE_HORSE_SPAWN_EGG, List.of(ModItems.ZOMBIE_NAUTILUS_SPAWN_EGG.get()));
+            after(event, Items.STRIDER_SPAWN_EGG, List.of(ModItems.SULFUR_CUBE_SPAWN_EGG.get()));
         } else if (tab == CreativeModeTabs.INGREDIENTS) {
             after(event, Items.IRON_NUGGET, List.of(ModItems.COPPER_NUGGET.get()));
             after(event, Items.EGG, List.of(ModItems.BLUE_EGG.get(), ModItems.BROWN_EGG.get()));

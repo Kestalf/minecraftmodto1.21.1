@@ -25,6 +25,7 @@ public class GoldenDandelionItem extends BlockItem {
     }
 
     public static boolean canAgeLock(LivingEntity target) {
+        if (target instanceof io.github.kestalf.futurebackport.entity.sulfur.SulfurCube cube) return cube.isSmall();
         return target instanceof AgeableMob mob && mob.isBaby()
                 && (!(target instanceof Enemy) || target instanceof Hoglin)
                 && !(target instanceof AbstractVillager)

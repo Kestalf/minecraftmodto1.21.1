@@ -28,6 +28,8 @@ public final class ModRegistryEntries {
 
     public static void damageTypes(BootstrapContext<DamageType> context) {
         context.register(ModKeys.SPEAR, new DamageType("spear", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1F));
+        context.register(ModKeys.SULFUR_CUBE_HOT, new DamageType("sulfurCubeHot", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1F,
+                net.minecraft.world.damagesource.DamageEffects.BURNING));
     }
 
     public static void jukeboxSongs(BootstrapContext<JukeboxSong> context) {

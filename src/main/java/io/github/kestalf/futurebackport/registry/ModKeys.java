@@ -12,6 +12,7 @@ import net.minecraft.world.entity.decoration.PaintingVariant;
 public final class ModKeys {
     public static final ResourceKey<Enchantment> LUNGE = ResourceKey.create(Registries.ENCHANTMENT, FutureBackport.id("lunge"));
     public static final ResourceKey<DamageType> SPEAR = ResourceKey.create(Registries.DAMAGE_TYPE, FutureBackport.id("spear"));
+    public static final ResourceKey<DamageType> SULFUR_CUBE_HOT = ResourceKey.create(Registries.DAMAGE_TYPE, FutureBackport.id("sulfur_cube_hot"));
     public static final ResourceKey<JukeboxSong> TEARS = ResourceKey.create(Registries.JUKEBOX_SONG, FutureBackport.id("tears"));
     public static final ResourceKey<JukeboxSong> LAVA_CHICKEN = ResourceKey.create(Registries.JUKEBOX_SONG, FutureBackport.id("lava_chicken"));
     public static final ResourceKey<JukeboxSong> BOUNCE = ResourceKey.create(Registries.JUKEBOX_SONG, FutureBackport.id("bounce"));

@@ -1,5 +1,6 @@
 package io.github.kestalf.futurebackport.registry;
 
+import io.github.kestalf.futurebackport.entity.sulfur.SulfurCube;
 import io.github.kestalf.futurebackport.FutureBackport;
 import io.github.kestalf.futurebackport.entity.Cushion;
 import io.github.kestalf.futurebackport.entity.creaking.Creaking;
@@ -50,6 +51,10 @@ public final class ModEntities {
             () -> EntityType.Builder.of(Parched::new, MobCategory.MONSTER).sized(0.6F, 1.99F).eyeHeight(1.74F)
                     .ridingOffset(-0.7F).clientTrackingRange(8).build("parched"));
 
+    public static final DeferredHolder<EntityType<?>, EntityType<SulfurCube>> SULFUR_CUBE = ENTITIES.register("sulfur_cube",
+            () -> EntityType.Builder.of(SulfurCube::new, MobCategory.CREATURE).sized(0.49F, 0.49F).eyeHeight(0.3125F)
+                    .clientTrackingRange(10).build("sulfur_cube"));
+
     public static final DeferredHolder<EntityType<?>, EntityType<Cushion>> CUSHION = ENTITIES.register("cushion",
             () -> EntityType.Builder.<Cushion>of(Cushion::new, MobCategory.MISC).sized(0.999F, 0.249F).noSummon()
                     .clientTrackingRange(10).updateInterval(Integer.MAX_VALUE).build("cushion"));
@@ -66,6 +71,7 @@ public final class ModEntities {
         event.put(ZOMBIE_NAUTILUS.get(), AbstractNautilus.createAttributes().build());
         event.put(CAMEL_HUSK.get(), Camel.createAttributes().build());
         event.put(PARCHED.get(), Parched.createAttributes().build());
+        event.put(SULFUR_CUBE.get(), SulfurCube.createAttributes().build());
     }
 
     public static void registerSpawnPlacements(RegisterSpawnPlacementsEvent event) {
@@ -73,6 +79,8 @@ public final class ModEntities {
                 AbstractNautilus::checkSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(PARCHED.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Parched::checkSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(SULFUR_CUBE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                net.minecraft.world.entity.Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
     private ModEntities() {

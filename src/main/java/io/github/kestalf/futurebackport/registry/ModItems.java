@@ -135,6 +135,11 @@ public final class ModItems {
 
     // ------------------------------------------------------------------ eggs of warm and cold chickens (1.21.5)
 
+    public static final DeferredItem<DeferredSpawnEggItem> SULFUR_CUBE_SPAWN_EGG = ITEMS.register("sulfur_cube_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.SULFUR_CUBE, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
+    public static final DeferredItem<io.github.kestalf.futurebackport.item.SulfurCubeBucketItem> SULFUR_CUBE_BUCKET = ITEMS.register(
+            "sulfur_cube_bucket", () -> new io.github.kestalf.futurebackport.item.SulfurCubeBucketItem(new Item.Properties().stacksTo(1)));
+
     public static final DeferredItem<EggItem> BLUE_EGG = ITEMS.register("blue_egg", () -> new EggItem(new Item.Properties().stacksTo(16)));
     public static final DeferredItem<EggItem> BROWN_EGG = ITEMS.register("brown_egg", () -> new EggItem(new Item.Properties().stacksTo(16)));
 

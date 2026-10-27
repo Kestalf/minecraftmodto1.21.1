@@ -6,6 +6,7 @@ import io.github.kestalf.futurebackport.client.particle.FallingLeafParticle;
 import io.github.kestalf.futurebackport.client.particle.FireflyParticle;
 import io.github.kestalf.futurebackport.client.particle.GrowthParticle;
 import io.github.kestalf.futurebackport.client.particle.SulfurParticles;
+import io.github.kestalf.futurebackport.client.entity.SulfurCubeRenderer;
 import io.github.kestalf.futurebackport.client.particle.TrailParticle;
 import io.github.kestalf.futurebackport.registry.ModBlockEntities;
 import io.github.kestalf.futurebackport.registry.ModBlocks;
@@ -119,6 +120,10 @@ public final class ClientSetup {
         event.registerLayerDefinition(ModModelLayers.NAUTILUS_ARMOR, NautilusModel::createArmorLayer);
         event.registerLayerDefinition(ModModelLayers.ZOMBIE_NAUTILUS_CORAL, NautilusModel::createCoralLayer);
         event.registerLayerDefinition(ModModelLayers.PARCHED, DesertMobRenderers::createParchedLayer);
+        event.registerLayerDefinition(ModModelLayers.SULFUR_CUBE, SulfurCubeRenderer::createInnerLayer);
+        event.registerLayerDefinition(ModModelLayers.SULFUR_CUBE_OUTER, SulfurCubeRenderer::createOuterLayer);
+        event.registerLayerDefinition(ModModelLayers.SULFUR_CUBE_SMALL, SulfurCubeRenderer::createSmallInnerLayer);
+        event.registerLayerDefinition(ModModelLayers.SULFUR_CUBE_SMALL_OUTER, SulfurCubeRenderer::createSmallOuterLayer);
         event.registerLayerDefinition(ModModelLayers.CUSHION, io.github.kestalf.futurebackport.client.entity.CushionRenderer::createLayer);
         event.registerLayerDefinition(ModModelLayers.COLD_CHICKEN, FarmVariantRenderers::createColdChickenLayer);
         event.registerLayerDefinition(ModModelLayers.VARIANT_COW, FarmVariantRenderers::createVariantCowLayer);
@@ -134,6 +139,7 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.ZOMBIE_NAUTILUS.get(), NautilusRenderer::new);
         event.registerEntityRenderer(ModEntities.CAMEL_HUSK.get(), DesertMobRenderers.CamelHuskRenderer::new);
         event.registerEntityRenderer(ModEntities.PARCHED.get(), DesertMobRenderers.ParchedRenderer::new);
+        event.registerEntityRenderer(ModEntities.SULFUR_CUBE.get(), SulfurCubeRenderer::new);
         event.registerEntityRenderer(ModEntities.CUSHION.get(), io.github.kestalf.futurebackport.client.entity.CushionRenderer::new);
         event.registerEntityRenderer(net.minecraft.world.entity.EntityType.CHICKEN, FarmVariantRenderers.Chickens::new);
         event.registerEntityRenderer(net.minecraft.world.entity.EntityType.COW, FarmVariantRenderers.Cows::new);

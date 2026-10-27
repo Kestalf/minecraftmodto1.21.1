@@ -75,6 +75,35 @@ public final class ModMiscTagsProviders {
             tag(EntityTypeTags.FALL_DAMAGE_IMMUNE).add(ModEntities.COPPER_GOLEM.get());
             tag(EntityTypeTags.UNDEAD).add(ModEntities.CAMEL_HUSK.get());
             tag(EntityTypeTags.SKELETONS).add(ModEntities.PARCHED.get());
+            tag(EntityTypeTags.NOT_SCARY_FOR_PUFFERFISH).add(ModEntities.SULFUR_CUBE.get());
+        }
+    }
+
+    public static class DamageTypes extends net.minecraft.data.tags.TagsProvider<net.minecraft.world.damagesource.DamageType> {
+        public DamageTypes(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup, ExistingFileHelper helper) {
+            super(output, net.minecraft.core.registries.Registries.DAMAGE_TYPE, lookup, FutureBackport.MOD_ID, helper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.Provider provider) {
+            // What a sulfur cube with a block shrugs off (26.3 list; mace smashes are player attacks here).
+            tag(ModTags.DamageTypes.SULFUR_CUBE_WITH_BLOCK_IMMUNE_TO).add(net.minecraft.world.damagesource.DamageTypes.ARROW,
+                    net.minecraft.world.damagesource.DamageTypes.CACTUS, net.minecraft.world.damagesource.DamageTypes.FALL,
+                    net.minecraft.world.damagesource.DamageTypes.FALLING_ANVIL, net.minecraft.world.damagesource.DamageTypes.FALLING_BLOCK,
+                    net.minecraft.world.damagesource.DamageTypes.FALLING_STALACTITE, net.minecraft.world.damagesource.DamageTypes.FREEZE,
+                    net.minecraft.world.damagesource.DamageTypes.HOT_FLOOR, net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK,
+                    net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK_NO_AGGRO, net.minecraft.world.damagesource.DamageTypes.MOB_PROJECTILE,
+                    net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK, ModKeys.SPEAR, net.minecraft.world.damagesource.DamageTypes.SPIT,
+                    net.minecraft.world.damagesource.DamageTypes.STALAGMITE, net.minecraft.world.damagesource.DamageTypes.STING,
+                    ModKeys.SULFUR_CUBE_HOT, net.minecraft.world.damagesource.DamageTypes.SWEET_BERRY_BUSH,
+                    net.minecraft.world.damagesource.DamageTypes.THROWN, net.minecraft.world.damagesource.DamageTypes.TRIDENT,
+                    net.minecraft.world.damagesource.DamageTypes.WIND_CHARGE)
+                    .addTag(net.minecraft.tags.DamageTypeTags.IS_EXPLOSION);
+            for (var tag : java.util.List.of(net.minecraft.tags.DamageTypeTags.IS_FIRE, net.minecraft.tags.DamageTypeTags.BURN_FROM_STEPPING,
+                    net.minecraft.tags.DamageTypeTags.NO_KNOCKBACK, net.minecraft.tags.DamageTypeTags.BYPASSES_SHIELD,
+                    net.minecraft.tags.DamageTypeTags.PANIC_ENVIRONMENTAL_CAUSES)) {
+                tag(tag).add(ModKeys.SULFUR_CUBE_HOT);
+            }
         }
     }
 

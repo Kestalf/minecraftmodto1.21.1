@@ -34,6 +34,8 @@ public final class ModTags {
         public static final TagKey<Item> NAUTILUS_FOOD = tag("nautilus_food");
         public static final TagKey<Item> NAUTILUS_BUCKET_FOOD = tag("nautilus_bucket_food");
         public static final TagKey<Item> NAUTILUS_TAMING_ITEMS = tag("nautilus_taming_items");
+        public static final TagKey<Item> SULFUR_CUBE_FOOD = tag("sulfur_cube_food");
+        public static final TagKey<Item> SULFUR_CUBE_SWALLOWABLE = tag("sulfur_cube_swallowable");
 
         private static TagKey<Item> tag(String name) {
             return TagKey.create(Registries.ITEM, FutureBackport.id(name));
@@ -47,6 +49,14 @@ public final class ModTags {
 
         private static TagKey<EntityType<?>> tag(String name) {
             return TagKey.create(Registries.ENTITY_TYPE, FutureBackport.id(name));
+        }
+    }
+
+    public static final class DamageTypes {
+        public static final TagKey<net.minecraft.world.damagesource.DamageType> SULFUR_CUBE_WITH_BLOCK_IMMUNE_TO = tag("sulfur_cube_with_block_immune_to");
+
+        private static TagKey<net.minecraft.world.damagesource.DamageType> tag(String name) {
+            return TagKey.create(Registries.DAMAGE_TYPE, FutureBackport.id(name));
         }
     }
 
