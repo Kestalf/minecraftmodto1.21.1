@@ -920,8 +920,9 @@ public final class ScreenshotTour {
             ServerLevel level = server.overworld();
             String name = m.player.getGameProfile().getName();
             exec(server, "gamemode spectator " + name);
+            level.getEntitiesOfClass(io.github.kestalf.futurebackport.entity.sulfur.SulfurCube.class, new net.minecraft.world.phys.AABB(base).inflate(40))
+                    .forEach(net.minecraft.world.entity.Entity::discard);
             exec(server, "kill @e[type=item]");
-            exec(server, "kill @e[type=futurebackport:sulfur_cube]");
             for (int x = -14; x <= 14; x++) {
                 for (int z = -8; z <= 14; z++) {
                     level.setBlock(base.offset(x, 0, z), Blocks.SMOOTH_STONE.defaultBlockState(), 2);

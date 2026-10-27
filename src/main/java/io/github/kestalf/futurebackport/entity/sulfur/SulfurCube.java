@@ -70,6 +70,9 @@ public class SulfurCube extends PathfinderMob implements Shearable {
     public static final int SMALL = 1;
     public static final int LARGE = 2;
     private static final int GROW_UP_TICKS = 24000;
+    /** Caps on how fast a hit can send a cube, and the smallest bounce that is not damped to rest. */
+    private static final double MAX_LAUNCH_SPEED = 1.0;
+    private static final double MIN_BOUNCE = 0.15;
     private static final EntityDataAccessor<Integer> SIZE = SynchedEntityData.defineId(SulfurCube.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> FUSE = SynchedEntityData.defineId(SulfurCube.class, EntityDataSerializers.INT);
 
@@ -374,9 +377,12 @@ public class SulfurCube extends PathfinderMob implements Shearable {
         float power = (0.5F + 0.5F * Mth.sqrt(Math.max(amount, 1.0F))) * (1.0F - archetype.knockbackResistance);
         Vec3 horizontal = new Vec3(direction.x, 0.0, direction.z);
         horizontal = horizontal.lengthSqr() < 1.0E-6 ? Vec3.ZERO : horizontal.normalize();
-        double up = archetype.verticalPower * power + Math.max(0.0, direction.normalize().y) * archetype.horizontalPower * power;
+        // Only a hit clearly from below (more up than sideways) adds lift beyond the archetype's own.
+        double lift = Math.max(0.0, direction.normalize().y - 0.5) * 2.0;
+        double up = archetype.verticalPower * power * (1.0 + lift * 2.0);
         if (!onGround()) up *= 1.5;
-        Vec3 push = horizontal.scale(archetype.horizontalPower * power + 0.5 * bonus).add(0.0, up, 0.0);
+        double speed = Math.min(archetype.horizontalPower * power + 0.5 * bonus, MAX_LAUNCH_SPEED);
+        Vec3 push = horizontal.scale(speed * (1.0 - lift * 0.5)).add(0.0, Math.min(up, MAX_LAUNCH_SPEED), 0.0);
         setDeltaMovement(getDeltaMovement().scale(0.5).add(push));
         hasImpulse = true;
         hurtMarked = true;
@@ -505,8 +511,18 @@ public class SulfurCube extends PathfinderMob implements Shearable {
         }
         if (verticalCollision) {
             y = -velocity.y * archetype.bounciness;
-            if (velocity.y < 0.0 && y < 0.1) y = 0.0;
-            if (velocity.y > 0.0) y = Math.min(y, 0.0);
+            if (velocity.y < 0.0) {
+                // The impact also brakes the cube sideways, more on grippy blocks and on hard landings.
+                double horizontal = Math.sqrt(x * x + z * z);
+                if (horizontal > 1.0E-4) {
+                    double braked = Math.max(0.0, horizontal - archetype.friction * (1.0 + archetype.bounciness) * -velocity.y * 2.0);
+                    x *= braked / horizontal;
+                    z *= braked / horizontal;
+                }
+                if (y < MIN_BOUNCE) y = 0.0;
+            } else {
+                y = Math.min(y, 0.0);
+            }
         }
         if (onGround()) {
             BlockPos below = getBlockPosBelowThatAffectsMyMovement();
