@@ -17,6 +17,7 @@ public final class ModModelLayers {
     public static final ModelLayerLocation NAUTILUS_SADDLE = layer("nautilus", "saddle");
     public static final ModelLayerLocation NAUTILUS_ARMOR = layer("nautilus", "armor");
     public static final ModelLayerLocation ZOMBIE_NAUTILUS_CORAL = layer("zombie_nautilus", "coral");
+    public static final ModelLayerLocation PARCHED = layer("parched");
 
     private static ModelLayerLocation layer(String name) {
         return layer(name, "main");

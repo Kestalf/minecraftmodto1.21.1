@@ -126,6 +126,11 @@ public final class ModItems {
     public static final DeferredItem<DeferredSpawnEggItem> ZOMBIE_NAUTILUS_SPAWN_EGG = ITEMS.register("zombie_nautilus_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntities.ZOMBIE_NAUTILUS, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
 
+    public static final DeferredItem<DeferredSpawnEggItem> CAMEL_HUSK_SPAWN_EGG = ITEMS.register("camel_husk_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.CAMEL_HUSK, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
+    public static final DeferredItem<DeferredSpawnEggItem> PARCHED_SPAWN_EGG = ITEMS.register("parched_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.PARCHED, 0xFFFFFF, 0xFFFFFF, new Item.Properties()));
+
     // ------------------------------------------------------------------ nautilus armor (1.21.11)
 
     public static final DeferredItem<NautilusArmorItem> COPPER_NAUTILUS_ARMOR = ITEMS.register("copper_nautilus_armor",

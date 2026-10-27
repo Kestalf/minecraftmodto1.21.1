@@ -112,6 +112,8 @@ final class VanillaTabPlacement {
             after(event, Items.COW_SPAWN_EGG, List.of(ModItems.CREAKING_SPAWN_EGG.get()));
             after(event, Items.GUARDIAN_SPAWN_EGG, List.of(ModItems.HAPPY_GHAST_SPAWN_EGG.get()));
             after(event, Items.MULE_SPAWN_EGG, List.of(ModItems.NAUTILUS_SPAWN_EGG.get()));
+            after(event, Items.CAMEL_SPAWN_EGG, List.of(ModItems.CAMEL_HUSK_SPAWN_EGG.get()));
+            after(event, Items.PANDA_SPAWN_EGG, List.of(ModItems.PARCHED_SPAWN_EGG.get()));
             after(event, Items.ZOMBIE_HORSE_SPAWN_EGG, List.of(ModItems.ZOMBIE_NAUTILUS_SPAWN_EGG.get()));
         } else if (tab == CreativeModeTabs.INGREDIENTS) {
             after(event, Items.IRON_NUGGET, List.of(ModItems.COPPER_NUGGET.get()));

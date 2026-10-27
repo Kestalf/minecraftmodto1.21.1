@@ -30,6 +30,7 @@ import io.github.kestalf.futurebackport.client.entity.CopperGolemModel;
 import io.github.kestalf.futurebackport.client.entity.CopperGolemRenderer;
 import io.github.kestalf.futurebackport.client.entity.CopperGolemStatueRenderer;
 import io.github.kestalf.futurebackport.client.entity.CreakingModel;
+import io.github.kestalf.futurebackport.client.entity.DesertMobRenderers;
 import io.github.kestalf.futurebackport.client.entity.NautilusModel;
 import io.github.kestalf.futurebackport.client.entity.NautilusRenderer;
 import io.github.kestalf.futurebackport.client.entity.CreakingRenderer;
@@ -107,6 +108,7 @@ public final class ClientSetup {
         event.registerLayerDefinition(ModModelLayers.NAUTILUS_SADDLE, NautilusModel::createSaddleLayer);
         event.registerLayerDefinition(ModModelLayers.NAUTILUS_ARMOR, NautilusModel::createArmorLayer);
         event.registerLayerDefinition(ModModelLayers.ZOMBIE_NAUTILUS_CORAL, NautilusModel::createCoralLayer);
+        event.registerLayerDefinition(ModModelLayers.PARCHED, DesertMobRenderers::createParchedLayer);
     }
 
     @SubscribeEvent
@@ -116,6 +118,8 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.COPPER_GOLEM.get(), CopperGolemRenderer::new);
         event.registerEntityRenderer(ModEntities.NAUTILUS.get(), NautilusRenderer::new);
         event.registerEntityRenderer(ModEntities.ZOMBIE_NAUTILUS.get(), NautilusRenderer::new);
+        event.registerEntityRenderer(ModEntities.CAMEL_HUSK.get(), DesertMobRenderers.CamelHuskRenderer::new);
+        event.registerEntityRenderer(ModEntities.PARCHED.get(), DesertMobRenderers.ParchedRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.COPPER_CHEST.get(), CopperChestRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.COPPER_GOLEM_STATUE.get(), CopperGolemStatueRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.SHELF.get(), io.github.kestalf.futurebackport.client.entity.ShelfRenderer::new);

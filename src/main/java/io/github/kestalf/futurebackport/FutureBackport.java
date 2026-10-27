@@ -31,6 +31,7 @@ public final class FutureBackport {
         ModBlocks.BLOCKS.register(modBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modBus);
         ModEntities.ENTITIES.register(modBus);
+        ModEntities.SENSORS.register(modBus);
         ModEffects.EFFECTS.register(modBus);
         ModItems.ITEMS.register(modBus);
         ModArmorMaterials.MATERIALS.register(modBus);

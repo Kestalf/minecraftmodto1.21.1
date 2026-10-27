@@ -92,6 +92,7 @@ public final class ScreenshotTour {
         if (scenario("golem")) addGolemScenario(server);
         if (scenario("shelf")) addShelfScenario(server);
         if (scenario("nautilus")) addNautilusScenario(server);
+        if (scenario("desert")) addDesertScenario(server);
         if (scenario("creative")) addCreativeScenario(server);
     }
 
@@ -649,6 +650,56 @@ public final class ScreenshotTour {
             m.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
             pending = server.submit(() -> server.getPlayerList().getPlayers().getFirst().stopRiding());
         });
+    }
+
+    /** Camel husk jockeys (husk with an iron spear and a parched riding a camel husk), a saddled camel husk, a parched. */
+    private static void addDesertScenario(MinecraftServer server) {
+        BlockPos base = ORIGIN.offset(-290, 0, 0);
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            String name = m.player.getGameProfile().getName();
+            exec(server, "gamemode spectator " + name);
+            for (int x = -12; x <= 12; x++) {
+                for (int z = -6; z <= 12; z++) {
+                    level.setBlock(base.offset(x, 0, z), Blocks.SANDSTONE.defaultBlockState(), 2);
+                    for (int y = 1; y < 8; y++) level.setBlock(base.offset(x, y, z), Blocks.AIR.defaultBlockState(), 2);
+                }
+            }
+            int jockeys = 0;
+            for (int i = 0; i < 60; i++) {
+                var husk = net.minecraft.world.entity.EntityType.HUSK.create(level);
+                husk.moveTo(base.getX() - 4, base.getY() + 1, base.getZ() + 4, 180, 0);
+                husk.finalizeSpawn(level, level.getCurrentDifficultyAt(husk.blockPosition()), net.minecraft.world.entity.MobSpawnType.NATURAL, null);
+                if (husk.getVehicle() instanceof io.github.kestalf.futurebackport.entity.desert.CamelHusk camel) {
+                    jockeys++;
+                    if (jockeys == 1) {
+                        FutureBackport.LOGGER.info("[tour] camel husk jockey: passengers={} husk weapon={}", camel.getPassengers(), husk.getMainHandItem());
+                        level.addFreshEntity(husk);
+                        camel.setNoAi(true);
+                        husk.setNoAi(true);
+                        camel.getPassengers().forEach(p -> { if (p instanceof net.minecraft.world.entity.Mob mob) mob.setNoAi(true); });
+                        continue;
+                    }
+                    camel.getPassengers().forEach(net.minecraft.world.entity.Entity::discard);
+                    camel.discard();
+                }
+                husk.discard();
+            }
+            FutureBackport.LOGGER.info("[tour] camel husk jockeys {}/60", jockeys);
+            var saddled = io.github.kestalf.futurebackport.registry.ModEntities.CAMEL_HUSK.get().create(level);
+            saddled.moveTo(base.getX() + 3, base.getY() + 1, base.getZ() + 4, 180, 0);
+            saddled.equipSaddle(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.SADDLE), null);
+            saddled.setNoAi(true);
+            level.addFreshEntity(saddled);
+            var parched = io.github.kestalf.futurebackport.registry.ModEntities.PARCHED.get().create(level);
+            parched.moveTo(base.getX() + 7, base.getY() + 1, base.getZ() + 3, 180, 0);
+            parched.finalizeSpawn(level, level.getCurrentDifficultyAt(parched.blockPosition()), net.minecraft.world.entity.MobSpawnType.NATURAL, null);
+            parched.setNoAi(true);
+            level.addFreshEntity(parched);
+            exec(server, String.format(java.util.Locale.ROOT, "tp %s %d %d %d 0 15", name, base.getX(), base.getY() + 4, base.getZ() - 5));
+        }));
+        STEPS.add(m -> m.options.hideGui = true);
+        STEPS.add(m -> shot(m, "desert_mobs"));
     }
 
     private static void logGolem(MinecraftServer server, java.util.UUID golemId, BlockPos base) {

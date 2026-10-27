@@ -6,7 +6,8 @@
   "mixins": [
     "AgeableMobMixin",
     "CarvedPumpkinBlockMixin",
-    "DrownedMixin"
+    "DrownedMixin",
+    "ZombieMixin"
   ],
   "client": [
     "client.LocalPlayerMixin"

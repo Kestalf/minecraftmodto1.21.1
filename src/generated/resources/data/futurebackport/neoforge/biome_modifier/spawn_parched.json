@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "minecraft:desert",
+  "spawners": {
+    "type": "futurebackport:parched",
+    "maxCount": 4,
+    "minCount": 4,
+    "weight": 50
+  }
+}

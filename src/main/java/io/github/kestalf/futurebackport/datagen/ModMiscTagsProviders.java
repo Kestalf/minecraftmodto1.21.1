@@ -73,6 +73,8 @@ public final class ModMiscTagsProviders {
             tag(EntityTypeTags.ZOMBIES).add(zombieNautilus);
             tag(EntityTypeTags.NOT_SCARY_FOR_PUFFERFISH).add(nautilus, zombieNautilus);
             tag(EntityTypeTags.FALL_DAMAGE_IMMUNE).add(ModEntities.COPPER_GOLEM.get());
+            tag(EntityTypeTags.UNDEAD).add(ModEntities.CAMEL_HUSK.get());
+            tag(EntityTypeTags.SKELETONS).add(ModEntities.PARCHED.get());
         }
     }
 

@@ -53,6 +53,10 @@ public final class ModRegistryEntries {
                 FutureBackport.id("spawn_nautilus")), net.neoforged.neoforge.common.world.BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(
                 biomes.getOrThrow(net.minecraft.tags.BiomeTags.IS_OCEAN),
                 new net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData(ModEntities.NAUTILUS.get(), 2, 1, 3)));
+        context.register(net.minecraft.resources.ResourceKey.create(net.neoforged.neoforge.registries.NeoForgeRegistries.Keys.BIOME_MODIFIERS,
+                FutureBackport.id("spawn_parched")), net.neoforged.neoforge.common.world.BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(
+                net.minecraft.core.HolderSet.direct(biomes.getOrThrow(net.minecraft.world.level.biome.Biomes.DESERT)),
+                new net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData(ModEntities.PARCHED.get(), 50, 4, 4)));
     }
 
     private ModRegistryEntries() {
