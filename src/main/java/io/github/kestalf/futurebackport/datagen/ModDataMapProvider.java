@@ -65,7 +65,7 @@ public class ModDataMapProvider extends DataMapProvider {
                 ModBlocks.WILDFLOWERS.get(), ModBlocks.BUSH.get(), ModBlocks.FIREFLY_BUSH.get(), ModBlocks.SHORT_DRY_GRASS.get(),
                 ModBlocks.CACTUS_FLOWER.get(), ModBlocks.RED_SHRUB.get());
         compost(compostables, 0.5F, ModBlocks.TALL_DRY_GRASS.get());
-        compost(compostables, 0.65F, ModBlocks.PALE_MOSS_BLOCK.get(), ModBlocks.OPEN_EYEBLOSSOM.get(), ModBlocks.CLOSED_EYEBLOSSOM.get(),
+        compost(compostables, 0.65F, ModBlocks.STRAW_BED.get(), ModBlocks.PALE_MOSS_BLOCK.get(), ModBlocks.OPEN_EYEBLOSSOM.get(), ModBlocks.CLOSED_EYEBLOSSOM.get(),
                 ModBlocks.GOLDEN_DANDELION.get(), ModBlocks.SHELF_MUSHROOM.get());
     }
 

@@ -4,9 +4,13 @@ import io.github.kestalf.futurebackport.FutureBackport;
 import io.github.kestalf.futurebackport.block.CopperFamily;
 import io.github.kestalf.futurebackport.block.CreakingHeartBlock;
 import io.github.kestalf.futurebackport.block.DriedGhastBlock;
+import io.github.kestalf.futurebackport.block.PotentSulfurBlock;
 import io.github.kestalf.futurebackport.block.ShelfBlock;
+import io.github.kestalf.futurebackport.block.StrawBedBlock;
+import io.github.kestalf.futurebackport.block.SulfurSpikeBlock;
 import io.github.kestalf.futurebackport.block.StoneFamily;
 import io.github.kestalf.futurebackport.block.WoodFamily;
+import net.minecraft.world.item.BedItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -151,6 +155,13 @@ public final class ModBlocks {
     public static final StoneFamily POLISHED_SULFUR = StoneFamily.of("polished_sulfur", "polished_sulfur", sulfur());
     public static final StoneFamily SULFUR_BRICKS = StoneFamily.of("sulfur_bricks", "sulfur_brick", sulfur());
     public static final DeferredBlock<Block> CHISELED_SULFUR = block("chiseled_sulfur", () -> new Block(sulfur()));
+    public static final DeferredBlock<PotentSulfurBlock> POTENT_SULFUR = block("potent_sulfur",
+            () -> new PotentSulfurBlock(sulfur().sound(ModSounds.POTENT_SULFUR_TYPE)));
+    public static final DeferredBlock<SulfurSpikeBlock> SULFUR_SPIKE = block("sulfur_spike", () -> new SulfurSpikeBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).forceSolidOn().instrument(NoteBlockInstrument.BASEDRUM)
+                    .noOcclusion().sound(ModSounds.SULFUR_SPIKE_TYPE).randomTicks().strength(1.5F, 3.0F).dynamicShape()
+                    .offsetType(BlockBehaviour.OffsetType.XZ).pushReaction(PushReaction.DESTROY)
+                    .isRedstoneConductor((state, level, pos) -> false)));
 
     // ------------------------------------------------------------------ wool / concrete stairs and slabs
 
@@ -185,6 +196,13 @@ public final class ModBlocks {
     public static final DeferredBlock<DriedGhastBlock> DRIED_GHAST = block("dried_ghast", () -> new DriedGhastBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instabreak().sound(ModSounds.DRIED_GHAST_TYPE).noOcclusion()
                     .randomTicks()));
+
+    // ------------------------------------------------------------------ straw bed (26.3)
+
+    public static final DeferredBlock<StrawBedBlock> STRAW_BED = blockWithItem("straw_bed", () -> new StrawBedBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).sound(ModSounds.STRAW_BED_TYPE).strength(0.2F).noOcclusion()
+                    .ignitedByLava().pushReaction(PushReaction.DESTROY)),
+            block -> new BedItem(block.get(), new Item.Properties().stacksTo(16)));
 
     // ------------------------------------------------------------------ shelves (1.21.9)
 

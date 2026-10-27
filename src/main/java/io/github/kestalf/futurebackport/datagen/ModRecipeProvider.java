@@ -133,6 +133,13 @@ public class ModRecipeProvider extends RecipeProvider {
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.CREAKING_HEART.get()).define('L', ModBlocks.PALE_OAK.log.get())
                 .define('R', ModBlocks.RESIN_BLOCK.get()).pattern(" L ").pattern(" R ").pattern(" L ")
                 .unlockedBy("has_resin_block", has(ModBlocks.RESIN_BLOCK.get())).save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.STRAW_BED.get(), 4).define('X', Items.HAY_BLOCK).pattern("XXX")
+                .unlockedBy("has_hay_block", has(Items.HAY_BLOCK)).save(output);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.POTENT_SULFUR.get())
+                .requires(ModBlocks.SULFUR.base().get(), 9).unlockedBy("has_sulfur", has(ModBlocks.SULFUR.base().get())).save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.SULFUR.base().get()).define('#', ModBlocks.SULFUR_SPIKE.get())
+                .pattern("##").pattern("##").unlockedBy("has_sulfur_spike", has(ModBlocks.SULFUR_SPIKE.get()))
+                .save(output, FutureBackport.id("sulfur_from_sulfur_spikes"));
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.DRIED_GHAST.get()).define('#', Items.GHAST_TEAR)
                 .define('X', Items.SOUL_SAND).pattern("###").pattern("#X#").pattern("###")
                 .unlockedBy("has_ghast_tear", has(Items.GHAST_TEAR)).save(output);

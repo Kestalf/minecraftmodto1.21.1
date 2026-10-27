@@ -45,7 +45,10 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
             add(BlockTags.SLABS, family.slab());
             add(BlockTags.WALLS, family.wall());
         }
-        add(BlockTags.MINEABLE_WITH_PICKAXE, ModBlocks.CHISELED_RESIN_BRICKS, ModBlocks.CHISELED_CINNABAR, ModBlocks.CHISELED_SULFUR);
+        add(BlockTags.MINEABLE_WITH_PICKAXE, ModBlocks.CHISELED_RESIN_BRICKS, ModBlocks.CHISELED_CINNABAR, ModBlocks.CHISELED_SULFUR,
+                ModBlocks.POTENT_SULFUR, ModBlocks.SULFUR_SPIKE);
+        add(BlockTags.SCULK_REPLACEABLE, ModBlocks.SULFUR.base());
+        add(BlockTags.MINEABLE_WITH_HOE, ModBlocks.STRAW_BED);
 
         for (var color : net.minecraft.world.item.DyeColor.values()) {
             var woolStairs = ModBlocks.WOOL_STAIRS.get(color);

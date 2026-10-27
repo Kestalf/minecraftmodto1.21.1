@@ -279,6 +279,8 @@ public abstract class ImportVanillaAssetsTask extends DefaultTask {
                 case "minecraft:range_dispatch":
                     return node.has("fallback") ? convertItemModel(node.getAsJsonObject("fallback")) : null;
                 case "minecraft:composite": {
+                    JsonObject merged = mergeComposite(node.getAsJsonArray("models"));
+                    if (merged != null) return merged;
                     for (JsonElement child : node.getAsJsonArray("models")) {
                         JsonObject converted = convertItemModel(child.getAsJsonObject());
                         if (converted != null) return converted;
@@ -295,6 +297,139 @@ public abstract class ImportVanillaAssetsTask extends DefaultTask {
                 default:
                     return null;
             }
+        }
+
+        /**
+         * Merges a composite of plain element models (e.g. the two halves of the straw bed) into one model. Only
+         * children turned by 0 or 180 degrees around Y and moved along X/Z are supported; anything else returns null.
+         * The result is centred on the block so that the elements stay inside the -16..32 range of 1.21.1.
+         */
+        private JsonObject mergeComposite(JsonArray children) {
+            if (children.size() < 2) return null;
+            JsonObject textures = new JsonObject();
+            JsonArray elements = new JsonArray();
+            JsonElement display = null;
+            for (int i = 0; i < children.size(); i++) {
+                JsonObject child = children.get(i).getAsJsonObject();
+                if (!child.get("type").getAsString().equals("minecraft:model")) return null;
+                String path = stripNamespace(child.get("model").getAsString());
+                String entry = "assets/minecraft/models/" + path + ".json";
+                if (!src.hasJarEntry(entry)) return null;
+                JsonObject model;
+                try {
+                    model = parse(src.readJar(entry)).getAsJsonObject();
+                } catch (IOException e) {
+                    return null;
+                }
+                if (model.has("parent") || !model.has("elements")) return null;
+                rewriteModel(model);
+                if (display == null && model.has("display")) display = model.get("display");
+                boolean turned = false;
+                double dx = 0, dz = 0;
+                if (child.has("transformation")) {
+                    JsonObject t = child.getAsJsonObject("transformation");
+                    for (String key : List.of("left_rotation", "right_rotation", "scale", "translation")) {
+                        if (!t.has(key) || !t.get(key).isJsonArray()) return null;
+                    }
+                    double[] left = doubles(t.get("left_rotation")), right = doubles(t.get("right_rotation"));
+                    double[] scale = doubles(t.get("scale")), move = doubles(t.get("translation"));
+                    if (!isIdentityRotation(right) || scale[0] != 1 || scale[1] != 1 || scale[2] != 1 || move[1] != 0) return null;
+                    if (isIdentityRotation(left)) {
+                        turned = false;
+                    } else if (Math.abs(Math.abs(left[1]) - 1) < 1e-6 && left[0] == 0 && left[2] == 0) {
+                        turned = true;
+                    } else {
+                        return null;
+                    }
+                    dx = move[0] * 16;
+                    dz = move[2] * 16;
+                }
+                String prefix = "c" + i + "_";
+                JsonObject childTextures = model.has("textures") ? model.getAsJsonObject("textures") : new JsonObject();
+                for (String key : childTextures.keySet()) {
+                    String value = childTextures.get(key).getAsString();
+                    if (key.equals("particle")) {
+                        if (!textures.has("particle")) textures.addProperty("particle", value.startsWith("#") ? "#" + prefix + value.substring(1) : value);
+                        continue;
+                    }
+                    textures.addProperty(prefix + key, value.startsWith("#") ? "#" + prefix + value.substring(1) : value);
+                }
+                for (JsonElement e : model.getAsJsonArray("elements")) {
+                    JsonObject element = e.getAsJsonObject().deepCopy();
+                    double[] from = doubles(element.get("from")), to = doubles(element.get("to"));
+                    if (turned) {
+                        if (element.has("rotation")) {
+                            JsonObject rotation = element.getAsJsonObject("rotation");
+                            double[] origin = doubles(rotation.get("origin"));
+                            rotation.add("origin", array(-origin[0] + dx, origin[1], -origin[2] + dz));
+                            if (!rotation.get("axis").getAsString().equals("y")) {
+                                rotation.addProperty("angle", -rotation.get("angle").getAsDouble());
+                            }
+                        }
+                        element.add("from", array(-to[0] + dx, from[1], -to[2] + dz));
+                        element.add("to", array(-from[0] + dx, to[1], -from[2] + dz));
+                        JsonObject faces = element.getAsJsonObject("faces");
+                        JsonObject turnedFaces = new JsonObject();
+                        for (String side : faces.keySet()) {
+                            JsonObject face = faces.getAsJsonObject(side);
+                            String newSide = switch (side) {
+                                case "north" -> "south";
+                                case "south" -> "north";
+                                case "east" -> "west";
+                                case "west" -> "east";
+                                default -> side;
+                            };
+                            if (side.equals("up") || side.equals("down")) {
+                                int r = face.has("rotation") ? face.get("rotation").getAsInt() : 0;
+                                face.addProperty("rotation", (r + 180) % 360);
+                            }
+                            turnedFaces.add(newSide, face);
+                        }
+                        element.add("faces", turnedFaces);
+                    } else if (dx != 0 || dz != 0) {
+                        if (element.has("rotation")) {
+                            JsonObject rotation = element.getAsJsonObject("rotation");
+                            double[] origin = doubles(rotation.get("origin"));
+                            rotation.add("origin", array(origin[0] + dx, origin[1], origin[2] + dz));
+                        }
+                        element.add("from", array(from[0] + dx, from[1], from[2] + dz));
+                        element.add("to", array(to[0] + dx, to[1], to[2] + dz));
+                    }
+                    for (Map.Entry<String, JsonElement> face : element.getAsJsonObject("faces").entrySet()) {
+                        JsonObject f = face.getValue().getAsJsonObject();
+                        f.remove("cullface");
+                        f.addProperty("texture", "#" + prefix + f.get("texture").getAsString().substring(1));
+                    }
+                    elements.add(element);
+                }
+            }
+            // Centre the union of all elements on the block.
+            double minX = Double.MAX_VALUE, maxX = -Double.MAX_VALUE, minZ = Double.MAX_VALUE, maxZ = -Double.MAX_VALUE;
+            for (JsonElement e : elements) {
+                double[] from = doubles(e.getAsJsonObject().get("from")), to = doubles(e.getAsJsonObject().get("to"));
+                minX = Math.min(minX, from[0]);
+                maxX = Math.max(maxX, to[0]);
+                minZ = Math.min(minZ, from[2]);
+                maxZ = Math.max(maxZ, to[2]);
+            }
+            double sx = 8 - (minX + maxX) / 2, sz = 8 - (minZ + maxZ) / 2;
+            for (JsonElement e : elements) {
+                JsonObject element = e.getAsJsonObject();
+                for (String key : List.of("from", "to")) {
+                    double[] v = doubles(element.get(key));
+                    element.add(key, array(v[0] + sx, v[1], v[2] + sz));
+                }
+                if (element.has("rotation")) {
+                    JsonObject rotation = element.getAsJsonObject("rotation");
+                    double[] origin = doubles(rotation.get("origin"));
+                    rotation.add("origin", array(origin[0] + sx, origin[1], origin[2] + sz));
+                }
+            }
+            JsonObject result = new JsonObject();
+            result.add("textures", textures);
+            result.add("elements", elements);
+            if (display != null) result.add("display", display);
+            return result;
         }
 
         void particles() throws IOException {
@@ -751,6 +886,24 @@ public abstract class ImportVanillaAssetsTask extends DefaultTask {
             result.add(element.getAsString());
         }
         return result;
+    }
+
+    private static double[] doubles(JsonElement element) {
+        JsonArray array = element.getAsJsonArray();
+        double[] result = new double[array.size()];
+        for (int i = 0; i < result.length; i++) result[i] = array.get(i).getAsDouble();
+        return result;
+    }
+
+    private static JsonArray array(double... values) {
+        JsonArray array = new JsonArray();
+        for (double v : values) array.add(v == Math.rint(v) ? (Number) (long) v : (Number) v);
+        return array;
+    }
+
+    /** True for the quaternion {@code [0, 0, 0, 1]} (or its negation). */
+    private static boolean isIdentityRotation(double[] q) {
+        return q[0] == 0 && q[1] == 0 && q[2] == 0 && Math.abs(Math.abs(q[3]) - 1) < 1e-6;
     }
 
     private static String stripNamespace(String ref) {

@@ -5,6 +5,7 @@ import io.github.kestalf.futurebackport.block.CopperFamily;
 import io.github.kestalf.futurebackport.block.entity.CopperChestBlockEntity;
 import io.github.kestalf.futurebackport.block.entity.CopperGolemStatueBlockEntity;
 import io.github.kestalf.futurebackport.block.entity.CreakingHeartBlockEntity;
+import io.github.kestalf.futurebackport.block.entity.PotentSulfurBlockEntity;
 import io.github.kestalf.futurebackport.block.entity.ShelfBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
@@ -29,6 +30,10 @@ public final class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ShelfBlockEntity>> SHELF =
             BLOCK_ENTITIES.register("shelf", () -> BlockEntityType.Builder.of(ShelfBlockEntity::new,
                     ModBlocks.SHELVES.values().stream().map(holder -> (Block) holder.get()).toArray(Block[]::new)).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PotentSulfurBlockEntity>> POTENT_SULFUR =
+            BLOCK_ENTITIES.register("potent_sulfur", () -> BlockEntityType.Builder.of(PotentSulfurBlockEntity::new,
+                    ModBlocks.POTENT_SULFUR.get()).build(null));
 
     private static Block[] blocks(CopperFamily.Weathering<?> weathering) {
         return weathering.all().stream().map(holder -> (Block) holder.get()).toArray(Block[]::new);

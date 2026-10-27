@@ -51,6 +51,10 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
         }
         dropSelf(ModBlocks.DRIED_GHAST.get());
         ModBlocks.SHELVES.values().forEach(b -> dropSelf(b.get()));
+        dropSelf(ModBlocks.POTENT_SULFUR.get());
+        dropSelf(ModBlocks.SULFUR_SPIKE.get());
+        add(ModBlocks.STRAW_BED.get(), block -> createSinglePropConditionTable(block, net.minecraft.world.level.block.BedBlock.PART,
+                net.minecraft.world.level.block.state.properties.BedPart.HEAD));
         var fortune = registries.lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
                 .getOrThrow(net.minecraft.world.item.enchantment.Enchantments.FORTUNE);
         add(ModBlocks.CREAKING_HEART.get(), block -> createSilkTouchDispatchTable(block, applyExplosionDecay(block,

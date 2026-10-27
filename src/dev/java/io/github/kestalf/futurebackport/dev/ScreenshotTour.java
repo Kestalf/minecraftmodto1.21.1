@@ -94,6 +94,7 @@ public final class ScreenshotTour {
         if (scenario("nautilus")) addNautilusScenario(server);
         if (scenario("desert")) addDesertScenario(server);
         if (scenario("farm")) addFarmScenario(server);
+        if (scenario("sulfur")) addSulfurScenario(server);
         if (scenario("creative")) addCreativeScenario(server);
     }
 
@@ -778,6 +779,136 @@ public final class ScreenshotTour {
         }));
         STEPS.add(m -> m.options.hideGui = true);
         STEPS.add(m -> shot(m, "farm_variants"));
+    }
+
+    private static void addSulfurScenario(MinecraftServer server) {
+        BlockPos base = ORIGIN.offset(-380, 0, 0);
+        java.util.UUID[] ids = new java.util.UUID[3];
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            String name = m.player.getGameProfile().getName();
+            exec(server, "gamemode spectator " + name);
+            exec(server, "kill @e[type=item]");
+            for (int x = -14; x <= 14; x++) {
+                for (int z = -8; z <= 12; z++) {
+                    level.setBlock(base.offset(x, -1, z), Blocks.STONE.defaultBlockState(), 2);
+                    level.setBlock(base.offset(x, 0, z), Blocks.STONE.defaultBlockState(), 2);
+                    for (int y = 1; y < 12; y++) level.setBlock(base.offset(x, y, z), Blocks.AIR.defaultBlockState(), 2);
+                }
+            }
+            // Three pools, 3 blocks of water over potent sulfur: plain (gas), over magma (geyser), over lava (continuous).
+            Block[] under = {Blocks.STONE, Blocks.MAGMA_BLOCK, Blocks.LAVA};
+            for (int i = 0; i < 3; i++) {
+                BlockPos centre = base.offset(-8 + i * 8, 0, 0);
+                for (int dx = -3; dx <= 3; dx++) {
+                    for (int dz = -3; dz <= 3; dz++) {
+                        boolean wall = Math.abs(dx) == 3 || Math.abs(dz) == 3;
+                        level.setBlock(centre.offset(dx, 1, dz), wall ? Blocks.GLASS.defaultBlockState() : Blocks.STONE.defaultBlockState(), 2);
+                        for (int y = 2; y <= 4; y++) {
+                            level.setBlock(centre.offset(dx, y, dz), wall ? Blocks.GLASS.defaultBlockState() : Blocks.WATER.defaultBlockState(), 2);
+                        }
+                    }
+                }
+                level.setBlock(centre, under[i].defaultBlockState(), 2);
+                BlockPos sulfur = centre.above();
+                level.setBlock(sulfur, io.github.kestalf.futurebackport.block.PotentSulfurBlock.withEnvironment(
+                        io.github.kestalf.futurebackport.registry.ModBlocks.POTENT_SULFUR.get().defaultBlockState(), level, sulfur), 3);
+                var pig = net.minecraft.world.entity.EntityType.PIG.create(level);
+                pig.moveTo(sulfur.getX() + 0.5, sulfur.getY() + 2, sulfur.getZ() + 0.5, 0, 0);
+                pig.setPersistenceRequired();
+                level.addFreshEntity(pig);
+                ids[i] = pig.getUUID();
+            }
+            // Make the magma geyser erupt now instead of in 35-50 seconds.
+            BlockPos magma = base.offset(0, 1, 0);
+            level.setBlock(magma, level.getBlockState(magma).setValue(io.github.kestalf.futurebackport.block.PotentSulfurBlock.STATE,
+                    io.github.kestalf.futurebackport.block.PotentSulfurBlock.State.ERUPTING), 3);
+            FutureBackport.LOGGER.info("[tour] sulfur states: {} {} {} | depth {}",
+                    level.getBlockState(base.offset(-8, 1, 0)), level.getBlockState(magma), level.getBlockState(base.offset(8, 1, 0)),
+                    io.github.kestalf.futurebackport.block.entity.PotentSulfurBlockEntity.waterDepth(level, magma));
+
+            // Sulfur spikes: a stalactite under sulfur that grows, and one that falls when its support goes.
+            var spike = io.github.kestalf.futurebackport.registry.ModBlocks.SULFUR_SPIKE.get();
+            var down = spike.defaultBlockState().setValue(io.github.kestalf.futurebackport.block.SulfurSpikeBlock.TIP_DIRECTION, net.minecraft.core.Direction.DOWN);
+            for (int i = 0; i < 2; i++) {
+                BlockPos ceiling = base.offset(-4 + i * 8, 9, 8);
+                level.setBlock(ceiling, io.github.kestalf.futurebackport.registry.ModBlocks.SULFUR.base().get().defaultBlockState(), 3);
+                level.setBlock(ceiling.below(), down, 3);
+            }
+            BlockPos growing = base.offset(-4, 8, 8);
+            var random = net.minecraft.util.RandomSource.create(1);
+            for (int t = 0; t < 20000; t++) {
+                BlockPos tip = growing;
+                while (level.getBlockState(tip.below()).is(spike)) tip = tip.below();
+                var state = level.getBlockState(tip);
+                if (state.isRandomlyTicking()) state.randomTick(level, tip, random);
+            }
+            StringBuilder column = new StringBuilder();
+            for (int y = 9; y >= 0; y--) {
+                var state = level.getBlockState(base.offset(-4, y, 8));
+                column.append(y).append('=').append(state.is(spike) ? state.getValue(io.github.kestalf.futurebackport.block.SulfurSpikeBlock.TIP_DIRECTION)
+                        + "/" + state.getValue(io.github.kestalf.futurebackport.block.SulfurSpikeBlock.THICKNESS) : state.getBlock().getName().getString()).append(' ');
+            }
+            FutureBackport.LOGGER.info("[tour] spike column after growth: {}", column);
+            level.setBlock(base.offset(4, 9, 8), Blocks.AIR.defaultBlockState(), 3);
+
+            // Straw beds: one to sleep in (at night, set a step ahead so that the sky darkens) and one for the screenshots.
+            exec(server, "time set 18000");
+            var bed = io.github.kestalf.futurebackport.registry.ModBlocks.STRAW_BED.get().defaultBlockState()
+                    .setValue(net.minecraft.world.level.block.BedBlock.FACING, net.minecraft.core.Direction.SOUTH);
+            for (BlockPos foot : List.of(base.offset(10, 1, 8), base.offset(12, 1, 8))) {
+                level.setBlock(foot, bed.setValue(net.minecraft.world.level.block.BedBlock.PART, net.minecraft.world.level.block.state.properties.BedPart.FOOT), 3);
+                level.setBlock(foot.south(), bed.setValue(net.minecraft.world.level.block.BedBlock.PART, net.minecraft.world.level.block.state.properties.BedPart.HEAD), 3);
+            }
+            var player = server.getPlayerList().getPlayers().getFirst();
+            player.getInventory().setItem(0, new net.minecraft.world.item.ItemStack(io.github.kestalf.futurebackport.registry.ModBlocks.STRAW_BED.get()));
+            player.getInventory().setItem(1, new net.minecraft.world.item.ItemStack(io.github.kestalf.futurebackport.registry.ModBlocks.POTENT_SULFUR.get()));
+            player.getInventory().setItem(2, new net.minecraft.world.item.ItemStack(spike));
+        }));
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            var player = server.getPlayerList().getPlayers().getFirst();
+            exec(server, "gamemode survival " + player.getGameProfile().getName());
+            BlockPos head = base.offset(10, 1, 9);
+            player.teleportTo(level, head.getX() + 0.5, head.getY(), head.getZ() + 1.5, 180, 0);
+            var before = player.getRespawnPosition();
+            var sleep = player.startSleepInBed(head);
+            FutureBackport.LOGGER.info("[tour] straw bed: problem={} sleeping={} occupied={} respawn before={} after={}", sleep.left(),
+                    player.isSleeping(), level.getBlockState(head).getValue(net.minecraft.world.level.block.BedBlock.OCCUPIED), before,
+                    player.getRespawnPosition());
+            player.stopSleepInBed(false, true);
+        }));
+        STEPS.add(m -> pending = server.submit(() -> {
+            ServerLevel level = server.overworld();
+            BlockPos head = base.offset(10, 1, 9);
+            java.util.function.Function<net.minecraft.world.phys.AABB, List<String>> drops = box -> level.getEntitiesOfClass(
+                    net.minecraft.world.entity.item.ItemEntity.class, box).stream().map(e -> e.getItem() + "@" + e.blockPosition().subtract(base)
+                    + " age " + e.getAge()).toList();
+            FutureBackport.LOGGER.info("[tour] straw bed after getting up: head={} foot={} bed drops={} | spike drops={}",
+                    level.getBlockState(head).getBlock().getName().getString(), level.getBlockState(head.north()).getBlock().getName().getString(),
+                    drops.apply(new net.minecraft.world.phys.AABB(head).inflate(3)), drops.apply(new net.minecraft.world.phys.AABB(base.offset(4, 1, 8)).inflate(2)));
+            for (int i = 0; i < 3; i++) {
+                var pig = (net.minecraft.world.entity.LivingEntity) level.getEntity(ids[i]);
+                FutureBackport.LOGGER.info("[tour] pool {}: state={} pig y={} nausea={}", i,
+                        level.getBlockState(base.offset(-8 + i * 8, 1, 0)).getValue(io.github.kestalf.futurebackport.block.PotentSulfurBlock.STATE),
+                        pig == null ? "gone" : String.format(java.util.Locale.ROOT, "%.2f", pig.getY() - base.getY()),
+                        pig != null && pig.hasEffect(net.minecraft.world.effect.MobEffects.CONFUSION));
+            }
+            String name = m.player.getGameProfile().getName();
+            exec(server, "time set 6000");
+            exec(server, "gamemode spectator " + name);
+            exec(server, String.format(java.util.Locale.ROOT, "tp %s %d %d %d 0 30", name, base.getX(), base.getY() + 9, base.getZ() - 14));
+        }));
+        STEPS.add(m -> m.options.hideGui = true);
+        STEPS.add(m -> shot(m, "sulfur_pools"));
+        STEPS.add(m -> run(server, String.format(java.util.Locale.ROOT, "tp %s %d %d %d 0 12", m.player.getGameProfile().getName(),
+                base.getX() + 3, base.getY() + 4, base.getZ() + 3)));
+        STEPS.add(m -> shot(m, "sulfur_spikes_beds"));
+        STEPS.add(m -> {
+            m.options.hideGui = false;
+            run(server, "gamemode creative " + m.player.getGameProfile().getName());
+        });
+        STEPS.add(m -> shot(m, "sulfur_items"));
     }
 
     private static void logGolem(MinecraftServer server, java.util.UUID golemId, BlockPos base) {

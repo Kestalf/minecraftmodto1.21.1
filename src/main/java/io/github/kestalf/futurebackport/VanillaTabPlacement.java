@@ -31,6 +31,7 @@ final class VanillaTabPlacement {
             minerals.addAll(stone(ModBlocks.SULFUR, null));
             minerals.addAll(stone(ModBlocks.POLISHED_SULFUR, null));
             minerals.addAll(stone(ModBlocks.SULFUR_BRICKS, ModBlocks.CHISELED_SULFUR.get()));
+            minerals.add(ModBlocks.POTENT_SULFUR.get());
             after(event, Items.CHISELED_TUFF_BRICKS, minerals);
             for (WeatherState state : WeatherState.values()) {
                 ItemLike anchor = switch (state) {
@@ -67,7 +68,8 @@ final class VanillaTabPlacement {
             after(event, Items.CACTUS, List.of(ModBlocks.CACTUS_FLOWER.get()));
             after(event, Items.BROWN_MUSHROOM, List.of(ModBlocks.SHELF_MUSHROOM.get()));
             after(event, Items.GLOW_LICHEN, List.of(ModBlocks.RESIN_CLUMP.get(), ModBlocks.RESIN_BLOCK.get(), ModBlocks.CREAKING_HEART.get()));
-            after(event, Items.TUFF, List.of(ModBlocks.CINNABAR.base().get(), ModBlocks.SULFUR.base().get()));
+            after(event, Items.TUFF, List.of(ModBlocks.CINNABAR.base().get(), ModBlocks.SULFUR.base().get(), ModBlocks.POTENT_SULFUR.get()));
+            after(event, Items.POINTED_DRIPSTONE, List.of(ModBlocks.SULFUR_SPIKE.get()));
         } else if (tab == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             after(event, Items.SOUL_TORCH, List.of(ModBlocks.COPPER.torchItem.get()));
             List<ItemLike> lanterns = new ArrayList<>();
@@ -77,6 +79,7 @@ final class VanillaTabPlacement {
             ModBlocks.COPPER.chests.all().forEach(b -> copperStorage.add(b.get()));
             ModBlocks.COPPER.statues.all().forEach(b -> copperStorage.add(b.get()));
             after(event, Items.TRAPPED_CHEST, copperStorage);
+            after(event, Items.PINK_BED, List.of(ModBlocks.STRAW_BED.get()));
             after(event, Items.CHISELED_BOOKSHELF, ModBlocks.SHELVES.values().stream().map(b -> (ItemLike) b.get()).toList());
             after(event, Items.CHERRY_HANGING_SIGN, List.of(ModBlocks.PALE_OAK.signItem.get(), ModBlocks.PALE_OAK.hangingSignItem.get(),
                     ModBlocks.POPLAR.signItem.get(), ModBlocks.POPLAR.hangingSignItem.get()));

@@ -54,6 +54,9 @@
     "futurebackport:short_dry_grass": {
       "chance": 0.3
     },
+    "futurebackport:straw_bed": {
+      "chance": 0.65
+    },
     "futurebackport:tall_dry_grass": {
       "chance": 0.5
     },

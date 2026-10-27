@@ -5,6 +5,7 @@ import io.github.kestalf.futurebackport.block.WoodFamily;
 import io.github.kestalf.futurebackport.client.particle.FallingLeafParticle;
 import io.github.kestalf.futurebackport.client.particle.FireflyParticle;
 import io.github.kestalf.futurebackport.client.particle.GrowthParticle;
+import io.github.kestalf.futurebackport.client.particle.SulfurParticles;
 import io.github.kestalf.futurebackport.client.particle.TrailParticle;
 import io.github.kestalf.futurebackport.registry.ModBlockEntities;
 import io.github.kestalf.futurebackport.registry.ModBlocks;
@@ -72,6 +73,8 @@ public final class ClientSetup {
                 ModBlocks.CACTUS_FLOWER, ModBlocks.GOLDEN_DANDELION, ModBlocks.POTTED_GOLDEN_DANDELION, ModBlocks.RED_SHRUB,
                 ModBlocks.SHELF_MUSHROOM));
         cutout.add(ModBlocks.DRIED_GHAST);
+        cutout.add(ModBlocks.SULFUR_SPIKE);
+        cutout.add(ModBlocks.STRAW_BED);
         cutout.addAll(ModBlocks.SHELVES.values());
         cutout.addAll(ModBlocks.COPPER.lanterns.all());
         cutout.add(ModBlocks.COPPER.torch);
@@ -92,6 +95,12 @@ public final class ClientSetup {
         event.registerSpriteSet(ModParticles.PAUSE_MOB_GROWTH, sprites -> new GrowthParticle.Provider(sprites, -0.04));
         event.registerSpriteSet(ModParticles.RESET_MOB_GROWTH, sprites -> new GrowthParticle.Provider(sprites, 0.04));
         event.registerSpriteSet(ModParticles.TRAIL, TrailParticle.Provider::new);
+        event.registerSpriteSet(ModParticles.GEYSER_BASE, sprites -> new SulfurParticles.Provider(sprites, SulfurParticles.Style.GEYSER_BASE));
+        event.registerSpriteSet(ModParticles.GEYSER_PLUME, sprites -> new SulfurParticles.Provider(sprites, SulfurParticles.Style.GEYSER_PLUME));
+        event.registerSpriteSet(ModParticles.GEYSER_POOF, sprites -> new SulfurParticles.Provider(sprites, SulfurParticles.Style.GEYSER_POOF));
+        event.registerSpriteSet(ModParticles.NOXIOUS_GAS, sprites -> new SulfurParticles.Provider(sprites, SulfurParticles.Style.NOXIOUS_GAS));
+        event.registerSpriteSet(ModParticles.SULFUR_BUBBLES, sprites -> new SulfurParticles.Provider(sprites, SulfurParticles.Style.SULFUR_BUBBLES));
+        event.registerSpriteSet(ModParticles.SULFUR_CUBE_GOO, sprites -> new SulfurParticles.Provider(sprites, SulfurParticles.Style.GOO));
     }
 
     @SubscribeEvent
